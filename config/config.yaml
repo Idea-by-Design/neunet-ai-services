@@ -1,0 +1,5 @@
+database:
+  connection_string: "mssql+pyodbc://sqladmin:neunet-admin123@neunet-sql-server.database.windows.net:1433/CandidateInfoDB?driver=ODBC+Driver+18+for+SQL+Server"
+azure:
+  storage_account_name: "neunetstotage"
+  storage_account_key: "GtWXVE3Yh3+8d+fT7b3yG1rsZOIewEuGcjnjB/UyfEvLWX3l1sRClT0rgUnB7BTRgMGec2fro3H/+AStVnmygw=="
