@@ -3,7 +3,7 @@ import os
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from io import BytesIO
-from pdf_parser import parse_pdf
+import fitz
 
 def docx_to_pdf(docx_path, pdf_path):
     doc = docx.Document(docx_path)
@@ -27,8 +27,29 @@ def docx_to_pdf(docx_path, pdf_path):
         f.write(buffer.getvalue())
 
 
+def parse_pdf(file_path):
+    doc = fitz.open(file_path)
+    text = ""
+    links = []
+    for _, page in enumerate(doc):
+        text += page.get_text()
+        link_dicts = page.get_links()
+        for link in link_dicts:
+            rect = fitz.Rect(link["from"])
+            # Get the text corresponding to the hyperlink area
+            link_text = page.get_text("text", clip=rect)
+            link_info = {
+                "link_text": link_text.strip(),
+                "link": link.get("uri") or link.get("file", "")
+            }
+            links.append(link_info)
+    doc.close()
+
+    return text, links
+
+
 def parse_doc(docx_path):
-    pdf_path = docx_path.replace('.docx', '.pdf')
+    pdf_path = "temp"+ docx_path.replace('.docx', '.pdf')
     
     docx_to_pdf(docx_path, pdf_path)
     

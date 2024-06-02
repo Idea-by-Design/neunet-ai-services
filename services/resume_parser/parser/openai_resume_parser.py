@@ -3,7 +3,7 @@ from openai import OpenAI
 import json
 
 import os
-from pdfminer.high_level import extract_text
+
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI()
@@ -13,19 +13,19 @@ def parse_resume_json(resume_text, links=None):
     
     prompt = f"""
     Extract the following information from the resume text.
-    - Name 
-    - Email
-    - Secondary Email
-    - Phone Number
-    - Secondary Phone Number
-    - Location
-    - Links 
-        - LinkedIn
-        - GitHub
-        - Website
-        - Other
-    - Skills (comma-separated list)
-    - Education 
+    - name 
+    - email
+    - secondary email
+    - phone number
+    - secondary phone number
+    - location
+    - links 
+        - linkedIn
+        - gitHub
+        - website
+        - other
+    - skills (comma-separated list)
+    - education 
         - education 1 
             - degree
             - institute
@@ -35,7 +35,7 @@ def parse_resume_json(resume_text, links=None):
             - end (format: MM/YYYY or "Present" if currently enrolled)
             - location
         - education 2 similar to above and so on
-    - Work Experience (this can include internships, etc.)
+    - work experience (this can include internships, etc.)
         - experience 1
             - organization
             - position
@@ -44,19 +44,19 @@ def parse_resume_json(resume_text, links=None):
             - end date (format: MM/YYYY or "Present" if currently working)
             - location
         - experience 2 similar to above and so on
-    - Projects
+    - projects
         - project 1
             - title
             - description
         - project 2 similar to above and so on
-    - Co-curricular activities
-    - Publications 
+    - co-curricular activities
+    - publications 
         - publication 1
             - title
             - link,
             - description
         - publication 2 similar to above and so on
-    - Achievements
+    - achievements
 
     Resume Text:
     {resume_text}
@@ -84,6 +84,7 @@ def parse_resume_json(resume_text, links=None):
     
     start_idx = raw_response.find("{")
     end_idx = raw_response.rfind("}")
+
     
 
     try:

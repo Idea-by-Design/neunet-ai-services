@@ -1,5 +1,6 @@
 import os
 import yaml
+import json
 from common.database.cosmos.db_setup import setup_database
 from common.database.cosmos.db_operations import upsert_resume
 from services.resume_parser.parser.openai_resume_parser import parse_resume_json
@@ -7,6 +8,9 @@ from services.resume_parser.parser.doc_parser import parse_doc
 from services.resume_parser.parser.pdf_parser import parse_pdf
 
 def main(file_path):
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"No such file: '{file_path}'")
+
     file_extension = os.path.splitext(file_path)[1].lower()
 
     if file_extension == '.pdf':
@@ -18,8 +22,7 @@ def main(file_path):
 
     extracted_info = parse_resume_json(text, hyperlinks)
     
-    # Print extracted information
-    print("Extracted Information:\n", json.dumps(extracted_info, indent=4))
+    extracted_info['id'] = extracted_info['email']
 
     # Load database configuration
     with open("config/config.yaml", 'r') as file:
@@ -36,7 +39,6 @@ def main(file_path):
     # Upsert resume data to the database
     try:
         upsert_resume(container, extracted_info)
-        print("Resume data upserted successfully.")
     except Exception as e:
         print(f"An error occurred: {e}")
 
