@@ -1,18 +1,25 @@
+import os
 import yaml
-import json
 from common.database.cosmos.db_setup import setup_database
 from common.database.cosmos.db_operations import upsert_resume
-from services.resume_parser.openai_resume_parser import parse_resume
+from services.resume_parser.parser.openai_resume_parser import parse_resume_json
+from services.resume_parser.parser.doc_parser import parse_doc
+from services.resume_parser.parser.pdf_parser import parse_pdf
 
 def main(file_path):
-    # Parse resume using OpenAI API
-    extracted_info = parse_resume(file_path)
+    file_extension = os.path.splitext(file_path)[1].lower()
+
+    if file_extension == '.pdf':
+        text, hyperlinks = parse_pdf(file_path)
+    elif file_extension in ['.doc', '.docx']:
+        text, hyperlinks = parse_doc(file_path)
+    else:
+        raise ValueError("Unsupported file format")
+
+    extracted_info = parse_resume_json(text, hyperlinks)
     
     # Print extracted information
-    print("##############################\n", extracted_info, "\n##############################\n")
-
-    # Convert JSON string to dictionary
-    resume_data = json.loads(extracted_info)
+    print("Extracted Information:\n", json.dumps(extracted_info, indent=4))
 
     # Load database configuration
     with open("config/config.yaml", 'r') as file:
@@ -27,7 +34,11 @@ def main(file_path):
     )
     
     # Upsert resume data to the database
-    upsert_resume(container, resume_data)
+    try:
+        upsert_resume(container, extracted_info)
+        print("Resume data upserted successfully.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     file_path = 'F:\\Job-Search\\VedikaSrivastava_Resume_May2024.pdf'
