@@ -4,8 +4,8 @@ database:
   cosmos_db_key: "hOlaV01rPLnOxzZf8LEbDUrs8osGbeG0R8xe3iuypkUHY5QIGsHq30eJtrrzNHmLTAM4p1nndfk8ACDbVoB1WQ=="
   cosmos_db_name: "CandidateInfoDB"
   container_name: "resumes"
+  github_container_name: "githubAnalysis"
 azure:
   storage_account_name: "neunetstotage"
   storage_account_key: "GtWXVE3Yh3+8d+fT7b3yG1rsZOIewEuGcjnjB/UyfEvLWX3l1sRClT0rgUnB7BTRgMGec2fro3H/+AStVnmygw=="
-
 
