@@ -36,6 +36,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential python3-dev
 
+      - name: Install aiohttp using only binary wheels
+        run: pip install aiohttp==3.8.2 --only-binary :all
+
+      - name: Install GitHub package without dependencies
+        run: pip install github==1.2.7 --no-deps
+
       - name: Install dependencies
         run: pip install -r requirements.txt
 
