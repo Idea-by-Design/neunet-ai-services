@@ -118,3 +118,4 @@ wheel==0.43.0
 wrapt==1.16.0
 yarg==0.1.9
 yarl==1.9.4
+aiohttp==3.8.1
