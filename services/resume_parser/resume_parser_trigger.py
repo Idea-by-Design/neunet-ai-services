@@ -1,20 +1,19 @@
-import azure.functions as func
 import logging
 import os
-import yaml
+import azure.functions as func
 from common.database.cosmos.db_setup import setup_database
 from common.database.cosmos.db_operations import upsert_resume
 from services.resume_parser.parser.openai_resume_parser import parse_resume_json
 from services.resume_parser.parser.doc_parser import parse_doc
 from services.resume_parser.parser.pdf_parser import parse_pdf
 
-def main(myblob: func.InputStream):
-    logging.info(f"Processing blob\nName: {myblob.name}\nSize: {myblob.length} bytes")
+def main(blob: func.InputStream):
+    logging.info(f"Processing blob\nName: {blob.name}\nSize: {blob.length} bytes")
 
     # Save the uploaded blob locally for processing
-    local_path = "/tmp/" + myblob.name
+    local_path = "/tmp/" + os.path.basename(blob.name)
     with open(local_path, "wb") as f:
-        f.write(myblob.read())
+        f.write(blob.read())
 
     # Determine the file type and parse accordingly
     file_extension = os.path.splitext(local_path)[1].lower()

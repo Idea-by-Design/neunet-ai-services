@@ -1,0 +1,14 @@
+{
+  "bindings": [
+    {
+      "name": "documents",
+      "type": "cosmosDBTrigger",
+      "direction": "in",
+      "databaseName": "your-db-name",
+      "collectionName": "resumes",
+      "connectionStringSetting": "AzureWebJobsCosmosDBConnectionString",
+      "leaseCollectionName": "leases",
+      "createLeaseCollectionIfNotExists": true
+    }
+  ]
+}
