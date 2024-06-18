@@ -1,4 +1,5 @@
 import logging
+import yaml
 import os
 import azure.functions as func
 from common.database.cosmos.db_setup import setup_database
