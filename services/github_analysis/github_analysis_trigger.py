@@ -4,6 +4,7 @@ from common.database.cosmos.db_operations import fetch_candidates_with_github_li
 from services.github_analysis.analyze_github import analyze_github_profile
 
 def main(documents: func.DocumentList) -> str:
+    logging.info("GitHub analysis trigger function proceesing", documents)
     if documents:
         for document in documents:
             email = document.get('email')
