@@ -10,5 +10,6 @@
       "leaseCollectionName": "leases",
       "createLeaseCollectionIfNotExists": true
     }
-  ]
+  ],
+  "scriptFile": "github_analysis_trigger.py"
 }

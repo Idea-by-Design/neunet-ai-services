@@ -7,6 +7,7 @@
         "path": "uploaded-resumes/{name}",
         "connection": "AzureWebJobsStorage"
       }
-    ]
+    ],
+    "scriptFile": "resume_parser_trigger.py"
   }
   
