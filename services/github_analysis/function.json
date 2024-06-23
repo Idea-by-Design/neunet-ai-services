@@ -11,5 +11,5 @@
       "createLeaseCollectionIfNotExists": true
     }
   ],
-  "scriptFile": "github_analysis_trigger.py"
+  "scriptFile": "services/github_analysis/github_analysis_trigger.py"
 }

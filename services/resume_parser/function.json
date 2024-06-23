@@ -8,6 +8,6 @@
         "connection": "AzureWebJobsStorage"
       }
     ],
-    "scriptFile": "resume_parser_trigger.py"
+    "scriptFile": "services/resume_parser/resume_parser_trigger.py"
   }
   
