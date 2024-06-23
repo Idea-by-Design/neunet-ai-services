@@ -92,9 +92,3 @@ jobs:
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           scm-do-build-during-deployment: true
           enable-oryx-build: true
-
-      - name: Sync function triggers
-        run: az functionapp function sync -g neunet -n ai-services-dep
-
-      - name: Retrieve function app logs
-        run: az functionapp log tail --name ai-services-dep --resource-group neunet
