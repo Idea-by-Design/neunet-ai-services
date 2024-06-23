@@ -94,8 +94,7 @@ jobs:
           enable-oryx-build: true
 
       - name: Sync function triggers
-        run: az functionapp update --name ai-services-dep --resource-group neunet
+        run: az functionapp function sync -g neunet -n ai-services-dep
 
-      - name: Restart Function App
-        run: az functionapp restart --name ai-services-dep --resource-group neunet
-          
+      - name: Retrieve function app logs
+        run: az functionapp log tail --name ai-services-dep --resource-group neunet
