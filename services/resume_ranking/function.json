@@ -1,0 +1,15 @@
+{
+  "bindings": [
+    {
+      "name": "documents",
+      "type": "cosmosDBTrigger",
+      "direction": "in",
+      "databaseName": "applicationdb",
+      "collectionName": "applicationdb",
+      "connectionStringSetting": "AzureWebJobsCosmosDBConnectionString",
+      "leaseCollectionName": "leases",
+      "createLeaseCollectionIfNotExists": true
+    }
+  ],
+  "scriptFile": "services/resume_ranking/agents_trigger.py"
+}
