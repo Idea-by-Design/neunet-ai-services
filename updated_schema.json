@@ -1,0 +1,209 @@
+{
+    "databases": [
+      {
+        "name": "RecruitmentDB",
+        "containers": [
+          {
+            "name": "resumes",
+            "partitionKey": "/email",
+            "indexingPolicy": {
+              "indexingMode": "consistent",
+              "automatic": true,
+              "includedPaths": [
+                {
+                  "path": "/*"
+                }
+              ],
+              "excludedPaths": [
+                {
+                  "path": "/resume_data/?"
+                }
+              ]
+            },
+            "sampleDocument": {
+              "id": "sample-id",
+              "name": "Sample Name",
+              "email": "sample@example.com",
+              "phone": "+1234567890",
+              "skills": ["Python", "Java", "SQL"],
+              "experience": 5,
+              "linkedin_url": "https://linkedin.com/in/samplename",
+              "resume_data": {
+                "education": [
+                  {
+                    "degree": "Bachelor of Science",
+                    "field": "Computer Science",
+                    "institution": "University of Example",
+                    "graduationYear": 2020
+                  }
+                ],
+                "work_experience": [
+                  {
+                    "company": "Tech Corp",
+                    "position": "Software Engineer",
+                    "startDate": "2020-01-01",
+                    "endDate": "2023-01-01",
+                    "description": "Developed and maintained web applications."
+                  }
+                ]
+              },
+              "last_contact": "2023-06-15T14:30:00Z",
+              "created_at": "2023-01-01T00:00:00Z",
+              "updated_at": "2023-06-15T14:30:00Z",
+              "_rid": "",
+              "_self": "",
+              "_etag": "",
+              "_attachments": "attachments/",
+              "_ts": 0
+            }
+          },
+          {
+            "name": "github",
+            "partitionKey": "/email",
+            "indexingPolicy": {
+              "indexingMode": "consistent",
+              "automatic": true,
+              "includedPaths": [
+                {
+                  "path": "/*"
+                }
+              ],
+              "excludedPaths": [
+                {
+                  "path": "/repositories/*/contribution_insights/?"
+                }
+              ]
+            },
+            "sampleDocument": {
+              "id": "sample-id",
+              "name": "Sample Name",
+              "email": "sample@example.com",
+              "github_url": "https://github.com/samplename",
+              "repositories": [
+                {
+                  "name": "project-awesome",
+                  "description": "An awesome project",
+                  "language": "Python",
+                  "stars": 50,
+                  "forks": 10,
+                  "last_updated": "2023-06-10T00:00:00Z",
+                  "contribution_insights": "Candidate shows strong skills in Python and web development..."
+                }
+              ],
+              "overall_analysis": "The candidate demonstrates proficiency in Python and web technologies...",
+              "analyzed_at": "2023-06-15T16:00:00Z",
+              "_rid": "",
+              "_self": "",
+              "_etag": "",
+              "_attachments": "attachments/",
+              "_ts": 0
+            }
+          },
+          {
+            "name": "ranking",
+            "partitionKey": "/job_id",
+            "indexingPolicy": {
+              "indexingMode": "consistent",
+              "automatic": true,
+              "includedPaths": [
+                {
+                  "path": "/*"
+                }
+              ]
+            },
+            "sampleDocument": {
+              "id": "unique-ranking-id",
+              "job_id": "job-12345",
+              "candidate_email": "sample@example.com",
+              "ranking": 8.5,
+              "ranking_details": {
+                "skill_match": 0.9,
+                "experience_match": 0.8,
+                "overall_fit": 0.85
+              },
+              "ranked_at": "2023-06-15T15:00:00Z",
+              "_rid": "",
+              "_self": "",
+              "_etag": "",
+              "_attachments": "attachments/",
+              "_ts": 0
+            }
+          },
+          {
+            "name": "jobs",
+            "partitionKey": "/id",
+            "indexingPolicy": {
+              "indexingMode": "consistent",
+              "automatic": true,
+              "includedPaths": [
+                {
+                  "path": "/*"
+                }
+              ]
+            },
+            "sampleDocument": {
+              "id": "job-12345",
+              "title": "Senior Python Developer",
+              "description": "We are looking for an experienced Python developer...",
+              "required_skills": ["Python", "Django", "SQL"],
+              "min_experience": 5,
+              "location": "New York, NY",
+              "salary_range": {
+                "min": 100000,
+                "max": 150000
+              },
+              "status": "open",
+              "created_at": "2023-06-01T00:00:00Z",
+              "updated_at": "2023-06-01T00:00:00Z",
+              "_rid": "",
+              "_self": "",
+              "_etag": "",
+              "_attachments": "attachments/",
+              "_ts": 0
+            }
+          },
+          {
+            "name": "recruitment_process",
+            "partitionKey": "/job_id",
+            "indexingPolicy": {
+              "indexingMode": "consistent",
+              "automatic": true,
+              "includedPaths": [
+                {
+                  "path": "/*"
+                }
+              ]
+            },
+            "sampleDocument": {
+              "id": "process-24680",
+              "job_id": "job-12345",
+              "candidate_email": "sample@example.com",
+              "status": "interview_scheduled",
+              "stages": [
+                {
+                  "name": "application_received",
+                  "completed_at": "2023-06-15T14:30:00Z"
+                },
+                {
+                  "name": "resume_screened",
+                  "completed_at": "2023-06-15T15:30:00Z"
+                },
+                {
+                  "name": "interview_scheduled",
+                  "completed_at": "2023-06-16T09:00:00Z"
+                }
+              ],
+              "notes": "Promising candidate, fast-tracked for interview.",
+              "created_at": "2023-06-15T14:30:00Z",
+              "updated_at": "2023-06-16T09:00:00Z",
+              "_rid": "",
+              "_self": "",
+              "_etag": "",
+              "_attachments": "attachments/",
+              "_ts": 0
+            }
+          }
+        ]
+      }
+    ]
+  }
