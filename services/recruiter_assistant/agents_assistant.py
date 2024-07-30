@@ -6,7 +6,7 @@ import json
 from datetime import datetime, timedelta
 
 # Import functions from other services
-from common_updated.database.cosmos.db_operations import (
+from common.database.cosmos.db_operations import (
     fetch_job_description,
     fetch_candidates_with_github_links,
     fetch_recruitment_processes,
