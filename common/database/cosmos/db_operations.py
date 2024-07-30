@@ -12,9 +12,9 @@ DATABASE_NAME = config['database']['cosmos_db_name']
 RESUMES_CONTAINER_NAME = config['database']['resumes_container_name']
 GITHUB_CONTAINER_NAME = config['database']['github_container_name']
 RANKING_CONTAINER_NAME = config['database']['ranking_container_name']
-JOBS_CONTAINER_NAME = config['database']['jobs_container_name']
+# JOBS_CONTAINER_NAME = config['database']['jobs_container_name']
 APPLICATION_CONTAINER_NAME = config['database']['application_container_name']
-RECRUITMENT_PROCESS_CONTAINER_NAME = config['database']['recruitment_process_container_name']
+# RECRUITMENT_PROCESS_CONTAINER_NAME = config['database']['recruitment_process_container_name']
 
 # Initialize Cosmos DB client
 client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
@@ -22,11 +22,11 @@ database = client.get_database_client(DATABASE_NAME)
 resumes_container = database.get_container_client(RESUMES_CONTAINER_NAME)
 github_container = database.get_container_client(GITHUB_CONTAINER_NAME)
 ranking_container = database.get_container_client(RANKING_CONTAINER_NAME)
-jobs_container = database.get_container_client(JOBS_CONTAINER_NAME)
+# jobs_container = database.get_container_client(JOBS_CONTAINER_NAME)
 application_container = database.get_container_client(APPLICATION_CONTAINER_NAME)
-recruitment_process_container = database.get_container_client(RECRUITMENT_PROCESS_CONTAINER_NAME)
+# recruitment_process_container = database.get_container_client(RECRUITMENT_PROCESS_CONTAINER_NAME)
 
-def upsert_resume(resume_data):
+def upsert_resume(container, resume_data):
     try:
         resumes_container.upsert_item(resume_data)
         print(f"Resume data upserted successfully for {resume_data['email']}!")

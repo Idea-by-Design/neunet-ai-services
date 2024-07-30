@@ -57,6 +57,11 @@ def parse_resume_json(resume_text, links=None):
             - description
         - publication 2 similar to above and so on
     - achievements
+    - certifications
+    - references
+    - languages
+    - hobbies
+    - keywords (comma-separated list; include technical and non-technical skills, tools, technologies, etc.; to be extracted from the resume text to highlight candidates expertise; list should be exhaustive)
 
     Resume Text:
     {resume_text}
@@ -66,7 +71,7 @@ def parse_resume_json(resume_text, links=None):
     Also, extract any additional information that you think is relevant and not covered in the above points.
     Use the exact keys and sub-key etc naming convention as described above. 
     If the information is not present in the resume then set the value to an empty string or null-value.
-    If skills are not found or clearly incicated by a heading, then pick the skills as per the resume.
+    If skills are not found or clearly incicated by a heading, then pick the skills as per the resume and add them to "keywords" tag.
     Provide the extracted information in JSON format. Return only the JSON string.
     """
 

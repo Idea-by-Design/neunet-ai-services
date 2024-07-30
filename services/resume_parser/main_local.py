@@ -33,7 +33,7 @@ def main(file_path):
         config['database']['cosmos_db_uri'],
         config['database']['cosmos_db_key'],
         config['database']['cosmos_db_name'],
-        config['database']['container_name']
+        config['database']['resumes_container_name']
     )
     
     # Upsert resume data to the database
@@ -43,5 +43,5 @@ def main(file_path):
         print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
-    file_path = 'F:\\Job-Search\\VedikaSrivastava_Resume_May2024.pdf'
+    file_path = 'F:\\Job-Search\\VedikaSrivastava_Resume_Jul2024.pdf'
     main(file_path)
