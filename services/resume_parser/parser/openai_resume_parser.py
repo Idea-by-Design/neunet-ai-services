@@ -61,7 +61,7 @@ def parse_resume_json(resume_text, links=None):
     - references
     - languages
     - hobbies
-    - keywords (comma-separated list; include technical and non-technical skills, tools, technologies, etc.; to be extracted from the resume text to highlight candidates expertise; list should be exhaustive)
+    - keywords (comma-separated list; analyse the resume text to detect technical and non-technical skills of the candidate and  tools, technologies, etc. the candidate appears to be proficient in; list should be exhaustive)
 
     Resume Text:
     {resume_text}
@@ -72,6 +72,7 @@ def parse_resume_json(resume_text, links=None):
     Use the exact keys and sub-key etc naming convention as described above. 
     If the information is not present in the resume then set the value to an empty string or null-value.
     If skills are not found or clearly incicated by a heading, then pick the skills as per the resume and add them to "keywords" tag.
+    "keywordes" tag cannot be empty. Analyse the resume to best of your ability and provide the keywords. Make sure to include both technical and non-technical skills. Examples of non-technical skills are leadership, time management, planning, decision making, strategic thinking etc). Be exhaustive.
     Provide the extracted information in JSON format. Return only the JSON string.
     """
 
