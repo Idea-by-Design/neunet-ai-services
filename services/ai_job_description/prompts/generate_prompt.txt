@@ -1,0 +1,10 @@
+Generate a job description based on the following data:
+Title: {title}
+Company Name: {company_name}
+Location: {location}
+Type: {type}
+Time Commitment: {time_commitment}
+Job Level: {job_level}
+Description: {description}
+Requirements: {requirements}
+Benefits: {benefits}
