@@ -119,3 +119,6 @@ wrapt==1.16.0
 yarg==0.1.9
 yarl==1.9.4
 # aiohttp==3.8.2
+langchain
+langchain_community
+langchain-openai

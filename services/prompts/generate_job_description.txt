@@ -1,0 +1,50 @@
+Please generate a job description using the following information:
+
+- **Job Title:** {title}
+- **Company Name:** {company_name}
+- **Location:** {location} 
+- **Estimated Pay Range:** {estimated_pay}
+- **Job Type:** {type} (remote, hybrid, onsite)
+- **Time Commitment:** {time_commitment} (full-time, part-time, contract)
+- **Job Level:** {job_level} (senior management, middle management, junior management, entry-level)
+- **Roles and Responsibilities:**
+  {description}
+
+- **Key Skills and Qualifications:**
+  {requirements}
+
+- **Benefits:**
+  {benefits}
+
+### Final Job Description
+
+**{title} at {company_name}**
+
+**Location:** {location}  
+**Job Type:** {type}  
+**Time Commitment:** {time_commitment}  
+**Estimated Pay Range:** {estimated_pay}  
+**Job Level:** {job_level}
+
+**About the Role:**
+{description}
+
+**Key Responsibilities:**
+- List the key responsibilities for this role based on the information provided above.
+- Make sure to include tasks that will help the candidate understand what a typical day might look like in this role.
+
+**Qualifications:**
+- Detail the qualifications necessary for this role.
+- Include education, experience, and specific skills or certifications required.
+
+**Skills and Competencies:**
+- List out the core skills and competencies needed to succeed in this role.
+- Highlight any software, tools, or methodologies that are essential.
+
+**Benefits:**
+- Outline the benefits provided by the company (e.g., health insurance, 401(k), remote work options, etc.).
+- Mention any unique perks that the company offers.
+
+---
+
+Ensure that the generated job description is engaging, clear, and tailored to attract the right candidates for this position. If certain information is not provided, please note that and generate a general placeholder or request additional details from the recruiter.
