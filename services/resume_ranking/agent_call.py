@@ -5,7 +5,7 @@ import json
 import uuid
 from dotenv import load_dotenv
 
-def initiate_chat(resume, job_description, canditate_mail):   
+def initiate_chat(resume, job_description, candidate_email):   
 
     # Load the .env file
     load_dotenv()
@@ -23,7 +23,7 @@ def initiate_chat(resume, job_description, canditate_mail):
     
     
     # Ranking tool function
-    def ranking_tool(canditate_mail, ranking , conversation, resume,  job_description):
+    def ranking_tool(candidate_email, ranking , conversation, resume,  job_description):
         
         # Load the existing ranking data from the JSON file
         ranking_data = load_ranking_data()
@@ -32,7 +32,7 @@ def initiate_chat(resume, job_description, canditate_mail):
         unique_id = str(uuid.uuid4())
         
         # Update the ranking data with the new entry
-        ranking_data[canditate_mail] = {
+        ranking_data[candidate_email] = {
             "Unique_id": unique_id,  # just in case if they have multiple applications but not trivial so used email as key but can be changed according to the requirement
             "ranking": ranking,
             "conversation": conversation,
@@ -43,8 +43,10 @@ def initiate_chat(resume, job_description, canditate_mail):
         # Save the updated ranking data to the JSON file
         save_ranking_data(ranking_data)
         
-        return f"Ranking entry saved with unique ID: {unique_id}"
-
+        return f"Ranking entry saved with unique ID: {unique_id} for candidate email: {candidate_email}"
+    
+    
+    
     # Load the ranking data from the JSON file
     def load_ranking_data():
         if os.path.exists("ranking_data.json"):
@@ -83,9 +85,9 @@ def initiate_chat(resume, job_description, canditate_mail):
         "parameters": {
             "type": "object",
             "properties": {
-                "candidate_name": {
+                "candidate_email": {
                     "type": "string",
-                    "description": "The name of the candidate"
+                    "description": "The email of the candidate"
                 },
             "ranking": {
                     "type": "number",
@@ -138,6 +140,6 @@ def initiate_chat(resume, job_description, canditate_mail):
                                         
                                         Resume: {resume}
                                         Job Description: {job_description}
-                                        Candidate mail: {canditate_mail}
+                                        Candidate mail: {candidate_email}
                                         """
                              )
