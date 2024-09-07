@@ -1,0 +1,139 @@
+```json
+{
+  "questionnaire": {
+    "Core Job Skills": [
+      {
+        "question": "Do you have experience with uncertainty quantification in machine learning?",
+        "weight": 5,
+        "scoring": "2 points for direct experience, 1 point for related experience."
+      },
+      {
+        "question": "Can you describe your experience with active learning and Bayesian optimization?",
+        "weight": 5,
+        "scoring": "2 points for direct experience, 1 point for related experience."
+      },
+      {
+        "question": "Which ML frameworks are you proficient in (e.g., PyTorch, TensorFlow, Jax)?",
+        "weight": 5,
+        "scoring": "2 points for proficiency in multiple frameworks, 1 point for proficiency in one."
+      },
+      {
+        "question": "How would you rate your skills in the Python data science ecosystem (Numpy, SciPy, Pandas, etc.)?",
+        "weight": 4,
+        "scoring": "2 points for extensive experience, 1 point for basic knowledge."
+      },
+      {
+        "question": "Have you implemented best practices for model tuning and evaluation?",
+        "weight": 4,
+        "scoring": "2 points for extensive experience, 1 point for basic knowledge."
+      }
+    ],
+    "Work History": [
+      {
+        "question": "Can you provide a brief overview of your career trajectory in machine learning?",
+        "weight": 4,
+        "scoring": "2 points for relevant roles, 1 point for general experience."
+      },
+      {
+        "question": "Have you worked in a similar role before? If so, please specify the companies and duration.",
+        "weight": 5,
+        "scoring": "2 points for direct experience, 1 point for related roles."
+      },
+      {
+        "question": "What is the longest duration you have spent in a single role?",
+        "weight": 3,
+        "scoring": "2 points for over 3 years, 1 point for 1-3 years."
+      }
+    ],
+    "Education and Certifications": [
+      {
+        "question": "Do you hold a PhD in Computer Science, Applied Mathematics, or a related field?",
+        "weight": 5,
+        "scoring": "2 points for a PhD, 1 point for a Master's degree."
+      },
+      {
+        "question": "Have you completed any certifications relevant to machine learning or data science?",
+        "weight": 3,
+        "scoring": "2 points for multiple certifications, 1 point for one."
+      }
+    ],
+    "Location and Work Eligibility": [
+      {
+        "question": "Are you currently located in or willing to relocate to Cambridge, Massachusetts?",
+        "weight": 5,
+        "scoring": "2 points for current location, 1 point for willingness to relocate."
+      },
+      {
+        "question": "Are you eligible to work in the USA without sponsorship?",
+        "weight": 5,
+        "scoring": "2 points for no sponsorship needed, 0 points for needing sponsorship."
+      }
+    ],
+    "Industry and Domain Expertise": [
+      {
+        "question": "How many years of experience do you have in machine learning?",
+        "weight": 5,
+        "scoring": "2 points for over 5 years, 1 point for 2-5 years."
+      },
+      {
+        "question": "What industries have you worked in that relate to materials discovery or synthesis?",
+        "weight": 4,
+        "scoring": "2 points for direct experience, 1 point for related industries."
+      }
+    ],
+    "Transferable Skills": [
+      {
+        "question": "Do you have experience with cloud computing services (e.g., AWS, Azure) for model training?",
+        "weight": 4,
+        "scoring": "2 points for extensive experience, 1 point for basic knowledge."
+      },
+      {
+        "question": "Have you worked with integrating machine learning into experimental workflows?",
+        "weight": 4,
+        "scoring": "2 points for direct experience, 1 point for related experience."
+      }
+    ],
+    "Career Impact and Initiative": [
+      {
+        "question": "Can you describe a project where you took the initiative that led to significant results?",
+        "weight": 5,
+        "scoring": "2 points for a major impact, 1 point for a minor impact."
+      },
+      {
+        "question": "Have you received any awards or recognitions in your career? Please specify.",
+        "weight": 3,
+        "scoring": "2 points for multiple recognitions, 1 point for one."
+      },
+      {
+        "question": "Have you held any leadership roles or mentored others in your field?",
+        "weight": 4,
+        "scoring": "2 points for extensive experience, 1 point for basic experience."
+      }
+    ],
+    "Language Proficiency": [
+      {
+        "question": "Are you proficient in any languages other than English that may be relevant to this role?",
+        "weight": 3,
+        "scoring": "2 points for fluency, 1 point for basic knowledge."
+      }
+    ],
+    "Cultural Fit": [
+      {
+        "question": "How do you approach collaboration in a team setting?",
+        "weight": 4,
+        "scoring": "2 points for strong collaborative experience, 1 point for basic experience."
+      },
+      {
+        "question": "Can you provide an example of how you adapted to a fast-paced or entrepreneurial environment?",
+        "weight": 5,
+        "scoring": "2 points for a strong example, 1 point for a basic example."
+      },
+      {
+        "question": "Have you taken on mentorship roles in your previous positions? Please elaborate.",
+        "weight": 3,
+        "scoring": "2 points for extensive experience, 1 point for basic experience."
+      }
+    ]
+  }
+}
+```
