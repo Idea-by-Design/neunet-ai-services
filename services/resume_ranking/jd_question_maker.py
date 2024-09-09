@@ -22,9 +22,9 @@ def generate_questionnaire(job_description):
     9. **Cultural Fit**: Questions about the candidate's team collaboration, mentorship roles, and adaptability.
 
     The responses should be in JSON format, with each question containing the following structure:
-    - "question": [The specific question that assesses the requirement]
+    - "question": [The specific question that assesses the requirement andaddress the candidate as Does the candidate have experience with...?]"]
     - "weight": [The importance of the question on a scale of 1-5]
-    - "scoring": [A scoring guide, e.g., 2 points for direct experience, 1 point for transferable skills, etc.]
+    - "scoring": [A scoring guide, e.g., 2 points for direct experience, 1 point for transferable skills, 0 points for no experience.]
 
     Here is the job description:
     {job_description}
