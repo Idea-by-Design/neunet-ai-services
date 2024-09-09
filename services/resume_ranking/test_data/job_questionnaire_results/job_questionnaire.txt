@@ -1,0 +1,144 @@
+```json
+{
+  "questionnaire": {
+    "Core Job Skills": [
+      {
+        "question": "Does the candidate have experience with uncertainty quantification?",
+        "weight": 5,
+        "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have expertise in active learning?",
+        "weight": 5,
+        "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have experience with Bayesian optimization?",
+        "weight": 5,
+        "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have proficiency in ML frameworks such as PyTorch, TensorFlow, or Jax?",
+        "weight": 5,
+        "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have experience with the Python data science ecosystem (Numpy, SciPy, Pandas, etc.)?",
+        "weight": 5,
+        "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have experience with cloud computing services for training and evaluating models?",
+        "weight": 4,
+        "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have excellent communication and presentation skills?",
+        "weight": 4,
+        "scoring": "2 points for demonstrated experience, 1 point for some experience, 0 points for no experience."
+      }
+    ],
+    "Work History": [
+      {
+        "question": "Does the candidate have a consistent career trajectory in machine learning or related fields?",
+        "weight": 4,
+        "scoring": "2 points for a clear upward trajectory, 1 point for varied roles, 0 points for inconsistent history."
+      },
+      {
+        "question": "Has the candidate worked in roles that required collaboration with computational or experimental teams?",
+        "weight": 4,
+        "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+      },
+      {
+        "question": "Has the candidate held positions that involved reporting findings to stakeholders?",
+        "weight": 3,
+        "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+      }
+    ],
+    "Education and Certifications": [
+      {
+        "question": "Does the candidate hold a PhD in Computer Science, Applied Mathematics, or a related field with a focus on ML?",
+        "weight": 5,
+        "scoring": "2 points for a PhD, 1 point for a Master's degree, 0 points for no relevant degree."
+      },
+      {
+        "question": "Does the candidate have any relevant certifications in machine learning or data science?",
+        "weight": 3,
+        "scoring": "2 points for relevant certifications, 1 point for general certifications, 0 points for no certifications."
+      }
+    ],
+    "Location and Work Eligibility": [
+      {
+        "question": "Is the candidate currently located in or willing to relocate to Cambridge, Massachusetts?",
+        "weight": 5,
+        "scoring": "2 points for current location, 1 point for willingness to relocate, 0 points for unwillingness."
+      },
+      {
+        "question": "Is the candidate eligible to work in the USA?",
+        "weight": 5,
+        "scoring": "2 points for full eligibility, 1 point for limited eligibility, 0 points for ineligibility."
+      }
+    ],
+    "Industry and Domain Expertise": [
+      {
+        "question": "Does the candidate have experience in materials synthesis and performance?",
+        "weight": 4,
+        "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have years of experience in machine learning or data science?",
+        "weight": 4,
+        "scoring": "2 points for 5+ years, 1 point for 2-5 years, 0 points for less than 2 years."
+      }
+    ],
+    "Transferable Skills": [
+      {
+        "question": "Does the candidate have experience with AWS services?",
+        "weight": 3,
+        "scoring": "2 points for direct experience, 1 point for familiarity, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have skills in integrating machine learning into experimental workflows?",
+        "weight": 4,
+        "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+      }
+    ],
+    "Career Impact and Initiative": [
+      {
+        "question": "Has the candidate received any awards or recognitions in their field?",
+        "weight": 3,
+        "scoring": "2 points for notable awards, 1 point for minor recognitions, 0 points for no awards."
+      },
+      {
+        "question": "Has the candidate taken initiatives that have positively impacted their previous roles?",
+        "weight": 4,
+        "scoring": "2 points for significant initiatives, 1 point for minor initiatives, 0 points for no initiatives."
+      }
+    ],
+    "Language Proficiency": [
+      {
+        "question": "Does the candidate have proficiency in any languages required for the role?",
+        "weight": 2,
+        "scoring": "2 points for fluency, 1 point for conversational skills, 0 points for no skills."
+      }
+    ],
+    "Cultural Fit": [
+      {
+        "question": "Does the candidate have experience working in fast-paced, entrepreneurial environments?",
+        "weight": 4,
+        "scoring": "2 points for direct experience, 1 point for some experience, 0 points for no experience."
+      },
+      {
+        "question": "Has the candidate held mentorship roles or participated in team collaboration?",
+        "weight": 3,
+        "scoring": "2 points for direct experience, 1 point for some experience, 0 points for no experience."
+      },
+      {
+        "question": "Is the candidate adaptable to changing environments and challenges?",
+        "weight": 4,
+        "scoring": "2 points for demonstrated adaptability, 1 point for some adaptability, 0 points for no adaptability."
+      }
+    ]
+  }
+}
+```
