@@ -41,13 +41,13 @@ def main():
     job_description_path = r"services\resume_ranking\test_data\sample_files\sample_job_description.txt"
     job_description = f"""{read_file_to_string(job_description_path)}"""
     
-    resume_path = r"services\resume_ranking\test_data\sample_files\sample_resume_1.txt"
-    resume = f"""{read_file_to_string(resume_path)}"""
-    candidate_email= "john.doe@example.com"
+    # resume_path = r"services\resume_ranking\test_data\sample_files\sample_resume_1.txt"
+    # resume = f"""{read_file_to_string(resume_path)}"""
+    # candidate_email= "john.doe@example.com"
     
-    # resume_path = r"services\resume_ranking\test_data\sample_files\sample_resume_2.txt"
-    # resume = read_file_to_string(resume_path)
-    # candidate_email= "jane.smith@example.com"
+    resume_path = r"services\resume_ranking\test_data\sample_files\sample_resume_2.txt"
+    resume = read_file_to_string(resume_path)
+    candidate_email= "jane.smith@example.com"
 
     questionnaire_path = r"services\resume_ranking\test_data\job_questionnaire_results\job_questionnaire.txt"
     questionnaire = f"""{read_file_to_string(questionnaire_path)}"""

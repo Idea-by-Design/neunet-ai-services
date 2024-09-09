@@ -68,16 +68,28 @@ def initiate_chat(resume, job_description, candidate_email, job_questionnaire):
 
     # Load the ranking data from the JSON file
     def load_ranking_data():
-        if os.path.exists(r"services\resume_ranking\test_data\ranking_results\ranking_data.json"):
-            with open(r"services\resume_ranking\test_data\ranking_results\ranking_data.json", "r") as file:
+        try:
+            with open(r"services\resume_ranking\test_data\ranking_results\ranking_data.json", "r", encoding="utf-8", errors="replace") as file:
                 return json.load(file)
-        else:
-            return {}
+        except UnicodeDecodeError as e:
+            print(f"Unicode decoding error: {e}. Problematic characters were replaced.")
+            return None
+        except json.JSONDecodeError as e:
+            print(f"Error parsing JSON: {e}")
+            return None
+
 
     # Save the ranking data to the JSON file
     def save_ranking_data(ranking_data):
-        with open(r"services\resume_ranking\test_data\ranking_results\ranking_data.json", "w") as file:
-            json.dump(ranking_data, file, ensure_ascii=False)
+        try:
+            with open(r"services\resume_ranking\test_data\ranking_results\ranking_data.json", "w", encoding="utf-8") as file:
+                json.dump(ranking_data, file, ensure_ascii=False)
+        except UnicodeEncodeError as e:
+            print(f"Unicode encoding error encountered: {e}. Replacing problematic characters.")
+            # Attempt to replace problematic characters
+            with open(r"services\resume_ranking\test_data\ranking_results\ranking_data.json", "w", encoding="utf-8") as file:
+                json.dump(ranking_data, file, ensure_ascii=False, errors="replace")
+
 
 
     # User proxy (The user proxy is the main object that you will use to interact with the assistant)
@@ -87,9 +99,24 @@ def initiate_chat(resume, job_description, candidate_email, job_questionnaire):
                                         code_execution_config={"use_docker": False})
 
     # Resume analysis agent to analyze the resume
-    resume_analyst = autogen.AssistantAgent(name="resume_analyst", system_message="""As the resume analysis agent,
-                                            you are responsible for analyzing the resume and answering questions about the candidate's skills and experience.
-                                            Look at the questions, weight, scoring options, and provide a score based on the resume.
+    resume_analyst = autogen.AssistantAgent(name="resume_analyst", system_message="""
+                                            
+                                                Task Overview: You are tasked with scoring resumes based on a questionnaire that assesses various aspects of a candidate’s experience. 
+                                                You need to score all Questions at once in one go.
+                                                Each question in the questionnaire carries a specific weight, and candidates are given a score of 0, 1, or 2 depending on their level of experience. 
+                                                Your goal is to calculate a final weighted score total by aggregating the scores from all sections.
+
+                                                Scoring Instructions:
+                                                For each question, assign a score based on the candidate’s experience:
+                                                2 points for direct experience or strong evidence.
+                                                1 point for related experience or partial evidence.
+                                                0 points for no experience or no relevant evidence.
+                                                Multiply the score by the weight of the question to calculate the weighted score for that question.
+
+                                                Sum the weighted scores for all questions across all sections to get the total weighted score.
+
+                                                Normalize the final total score by dividing the sum of the weighted scores by the maximum possible score (which should be 2 multipled by each weight) and express this as a percentage.
+                                                                                            
                                             """,
                                             llm_config={"config_list": [{"model":"gpt-4o-mini", "api_key":api_key}], 
                                                         "max_tokens": 2000})
@@ -99,6 +126,7 @@ def initiate_chat(resume, job_description, candidate_email, job_questionnaire):
                                                     you will ask relevant questions based on the job questionnaire to assess the candidate's fit. Here are the questions from the job questionnaire:
                                                     {questionnaire}
                                                     Show the questionnaire to resume analyst with questions, weight, scoring options.
+                                                    Ask the resume analyst to score the resume based on the questionnaire in one go.
                                                     """,
                                                     llm_config={"config_list": [{"model":"gpt-4o-mini", "api_key":api_key}], 
                                                                 "max_tokens": 2000})
@@ -137,7 +165,7 @@ def initiate_chat(resume, job_description, candidate_email, job_questionnaire):
     user_proxy.initiate_chat(group_chat_manager,
                              message=f"""Process overview:
                                         1. Job description analyst will show the complete questionnaire to resume analyst.
-                                        2. Resume analyst analyzes the resume and scores all questions at once in one go.
+                                        2. Resume analyst analyzes the resume and scores all questions at once in one go. 
                                         3. Ranking agent provides a ranking based on the responses.
                                         Resume: {resume}
                                         Job Description: {job_description}
