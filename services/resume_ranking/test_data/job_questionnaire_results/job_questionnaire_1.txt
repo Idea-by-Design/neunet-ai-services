@@ -1,0 +1,149 @@
+```json
+{
+  "questionnaire": {
+    "Core Job Skills": [
+      {
+        "question": "Does the candidate have experience with designing, developing, and implementing web applications?",
+        "weight": 5,
+        "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have proficiency in Python?",
+        "weight": 5,
+        "scoring": "2 points for strong proficiency, 1 point for basic knowledge, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have proficiency in JavaScript?",
+        "weight": 5,
+        "scoring": "2 points for strong proficiency, 1 point for basic knowledge, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have experience with version control systems like Git?",
+        "weight": 4,
+        "scoring": "2 points for extensive experience, 1 point for basic knowledge, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have strong problem-solving and analytical skills?",
+        "weight": 4,
+        "scoring": "2 points for demonstrated experience, 1 point for potential, 0 points for no evidence."
+      },
+      {
+        "question": "Does the candidate have experience with front-end and back-end development frameworks and libraries?",
+        "weight": 4,
+        "scoring": "2 points for experience with both, 1 point for experience with one, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have knowledge of database technologies and Web APIs?",
+        "weight": 4,
+        "scoring": "2 points for extensive knowledge, 1 point for basic knowledge, 0 points for no experience."
+      }
+    ],
+    "Work History": [
+      {
+        "question": "Does the candidate have a proven track record as a Software Engineer?",
+        "weight": 5,
+        "scoring": "2 points for extensive experience, 1 point for relevant experience in related roles, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have a consistent career trajectory in software development roles?",
+        "weight": 4,
+        "scoring": "2 points for consistent roles, 1 point for varied roles with relevant experience, 0 points for inconsistent history."
+      },
+      {
+        "question": "Has the candidate worked for reputable companies in the tech industry?",
+        "weight": 3,
+        "scoring": "2 points for well-known companies, 1 point for lesser-known but relevant companies, 0 points for no relevant experience."
+      }
+    ],
+    "Education and Certifications": [
+      {
+        "question": "Does the candidate hold a Bachelor's degree in Computer Science, Engineering, or a related field?",
+        "weight": 5,
+        "scoring": "2 points for a relevant degree, 1 point for a related degree, 0 points for no degree."
+      },
+      {
+        "question": "Does the candidate have any relevant certifications in software development?",
+        "weight": 3,
+        "scoring": "2 points for relevant certifications, 1 point for general certifications, 0 points for no certifications."
+      }
+    ],
+    "Location and Work Eligibility": [
+      {
+        "question": "Is the candidate currently located in or willing to relocate to San Francisco, CA?",
+        "weight": 4,
+        "scoring": "2 points for current location, 1 point for willingness to relocate, 0 points for unwillingness."
+      },
+      {
+        "question": "Is the candidate eligible to work remotely in the specified location?",
+        "weight": 5,
+        "scoring": "2 points for full eligibility, 1 point for partial eligibility, 0 points for ineligibility."
+      }
+    ],
+    "Industry and Domain Expertise": [
+      {
+        "question": "Does the candidate have experience in the technology industry?",
+        "weight": 5,
+        "scoring": "2 points for extensive experience, 1 point for some experience, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have familiarity with digital transformation projects?",
+        "weight": 4,
+        "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+      }
+    ],
+    "Transferable Skills": [
+      {
+        "question": "Does the candidate have experience with cloud technologies (e.g., AWS, Azure)?",
+        "weight": 3,
+        "scoring": "2 points for direct experience, 1 point for basic knowledge, 0 points for no experience."
+      },
+      {
+        "question": "Does the candidate have skills in related programming languages or technologies?",
+        "weight": 3,
+        "scoring": "2 points for direct experience, 1 point for related skills, 0 points for no experience."
+      }
+    ],
+    "Career Impact and Initiative": [
+      {
+        "question": "Has the candidate taken on leadership roles in previous positions?",
+        "weight": 4,
+        "scoring": "2 points for extensive leadership experience, 1 point for some leadership experience, 0 points for no experience."
+      },
+      {
+        "question": "Has the candidate received any awards or recognitions in their career?",
+        "weight": 3,
+        "scoring": "2 points for significant awards, 1 point for minor recognitions, 0 points for no awards."
+      },
+      {
+        "question": "Has the candidate initiated projects or improvements that positively impacted their team or company?",
+        "weight": 4,
+        "scoring": "2 points for significant initiatives, 1 point for minor contributions, 0 points for no initiatives."
+      }
+    ],
+    "Language Proficiency": [
+      {
+        "question": "Does the candidate have proficiency in any additional languages that may benefit the role?",
+        "weight": 2,
+        "scoring": "2 points for fluent proficiency, 1 point for basic knowledge, 0 points for no proficiency."
+      }
+    ],
+    "Cultural Fit": [
+      {
+        "question": "Does the candidate have experience collaborating in cross-functional teams?",
+        "weight": 4,
+        "scoring": "2 points for extensive experience, 1 point for some experience, 0 points for no experience."
+      },
+      {
+        "question": "Has the candidate taken on mentorship roles in their previous positions?",
+        "weight": 3,
+        "scoring": "2 points for extensive mentorship experience, 1 point for some experience, 0 points for no experience."
+      },
+      {
+        "question": "Is the candidate adaptable to changing work environments and team dynamics?",
+        "weight": 4,
+        "scoring": "2 points for demonstrated adaptability, 1 point for potential, 0 points for no evidence."
+      }
+    ]
+  }
+}
+```

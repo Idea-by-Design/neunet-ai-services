@@ -14,6 +14,7 @@ GITHUB_CONTAINER_NAME = config['database']['github_container_name']
 RANKING_CONTAINER_NAME = config['database']['ranking_container_name']
 JOBS_CONTAINER_NAME = config['database']['job_description_container_name']
 APPLICATION_CONTAINER_NAME = config['database']['application_container_name']
+JOB_DESCRIPTION_QUESTIONNAIRE_CONTAINER_NAME = config['database']['job_description_questionnaire_container_name']
 # RECRUITMENT_PROCESS_CONTAINER_NAME = config['database']['recruitment_process_container_name']
 
 # Initialize Cosmos DB client
@@ -24,6 +25,7 @@ github_container = database.get_container_client(GITHUB_CONTAINER_NAME)
 ranking_container = database.get_container_client(RANKING_CONTAINER_NAME)
 jobs_container = database.get_container_client(JOBS_CONTAINER_NAME)
 application_container = database.get_container_client(APPLICATION_CONTAINER_NAME)
+job_description_questionnaire_container = database.get_container_client(JOB_DESCRIPTION_QUESTIONNAIRE_CONTAINER_NAME)
 # recruitment_process_container = database.get_container_client(RECRUITMENT_PROCESS_CONTAINER_NAME)
 
 def upsert_resume(container, resume_data):
@@ -153,3 +155,11 @@ def fetch_application(application_id):
     except Exception as e:
         print(f"An error occurred while fetching application: {e}")
         return None
+    
+def store_job_questionnaire(questionnaire_data):
+    try:
+        print(f"Storing questionnaire data for {questionnaire_data['job_id']}")
+        job_description_questionnaire_container.upsert_item(body=questionnaire_data)
+        print(f"Questionnaire data stored successfully for {questionnaire_data['job_id']}")
+    except exceptions.CosmosHttpResponseError as e:
+        print(f"Failed to store Questionnaire data: {e}")

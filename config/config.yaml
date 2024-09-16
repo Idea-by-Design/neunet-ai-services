@@ -6,8 +6,9 @@ database:
   resumes_container_name: "resumes"
   github_container_name: "githubAnalysis"
   ranking_container_name: "ranking"  
-  job_description_container_name: "jobDescription"
+  job_description_container_name: "jobDetails"
   application_container_name: "applicationdb"
+  job_description_questionnaire_container_name: "jobDescriptionQuestionnaire"
 
 azure:
   storage_account_name: "neunetstotage"
