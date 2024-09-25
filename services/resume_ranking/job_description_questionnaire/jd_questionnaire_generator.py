@@ -1,9 +1,11 @@
 import os
+import openai
 from openai import OpenAI
 import json
 
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+openai.api_key = 'sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA'
+client = OpenAI(api_key='sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA')
 
 # Function to generate a questionnaire using GPT-4o-mini
 def generate_questionnaire(job_description):
@@ -21,10 +23,14 @@ def generate_questionnaire(job_description):
     8. **Language Proficiency**: Questions to verify any language skills required for the role.
     9. **Cultural Fit**: Questions about the candidate's team collaboration, mentorship roles, and adaptability.
 
-    The responses should be in JSON format, with each question containing the following structure:
-    - "question": [The specific question that assesses the requirement andaddress the candidate as Does the candidate have experience with...?]"]
-    - "weight": [The importance of the question on a scale of 1-5]
-    - "scoring": [A scoring guide, e.g., 2 points for direct experience, 1 point for transferable skills, 0 points for no experience.]
+    The responses should be in JSON format, with each question containing the following structure:    
+    - The main key should be "questionnaire".
+    - Inside "questionnaire", each category (e.g., "Core Job Skills", "Work History") should be a separate section.
+    - Each question should be formatted as:
+        - "question": [The specific question that assesses the requirement and addresses the candidate as Does the candidate have experience with...?"]
+        - "weight": [The importance of the question on a scale of 1-5]
+        - "scoring": [A scoring guide, e.g., 2 points for direct experience, 1 point for transferable skills, 0 points for no experience.]
+
 
     Here is the job description:
     {job_description}

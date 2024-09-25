@@ -3,10 +3,10 @@ import os
 import uuid
 from dotenv import load_dotenv
 import json
-from common.database.cosmos.db_operations import fetch_application_by_job_id,  fetch_application_by_job_id, create_application_for_job_id, save_ranking_data_to_cosmos_db
+import openai
+from openai import OpenAI
 
-
-def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candidate_email, job_questionnaire):
+def initiate_chat(resume, job_description, candidate_email, job_questionnaire):
 
     # Load the .env file
     load_dotenv()
@@ -36,48 +36,62 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
 
     # Ranking tool function
     def ranking_tool(candidate_email, ranking, conversation, resume, job_description):
+
+        # Sanitize all inputs to avoid JSON errors
+        candidate_email_safe = create_json_safe_payload(candidate_email)
+        resume_safe = create_json_safe_payload(resume)
+        job_description_safe = create_json_safe_payload(job_description)
+        conversation_safe = create_json_safe_payload(conversation)
+
+        if not all([candidate_email_safe, resume_safe, job_description_safe, conversation_safe]):
+            print("Error: One or more payload fields could not be converted to JSON-safe format.")
+            return "Payload creation failed due to special characters."
+
+        # Load the existing ranking data from the JSON file
+        ranking_data = load_ranking_data()
+
+        # Generate a unique ID for the ranking entry
+        unique_id = str(uuid.uuid4())
+
+        # Update the ranking data with the new entry
+        ranking_data[candidate_email_safe] = {
+            "Unique_id": unique_id,
+            "ranking": ranking,
+            "conversation": conversation_safe,
+            "resume": resume_safe,
+            "job_description": job_description_safe
+        }
+
+        # Save the updated ranking data to the JSON file
+        save_ranking_data(ranking_data)
+
+        return f"Ranking entry saved with unique ID: {unique_id} for candidate email: {candidate_email_safe}"
+
+
+    # Load the ranking data from the JSON file
+    def load_ranking_data():
         try:
-            # Sanitize all inputs to avoid JSON errors
-            candidate_email_safe = create_json_safe_payload(candidate_email)
-            resume_safe = create_json_safe_payload(resume)
-            job_description_safe = create_json_safe_payload(job_description)
-            conversation_safe = create_json_safe_payload(conversation)
-
-            if not all([candidate_email_safe, resume_safe, job_description_safe, conversation_safe]):
-                print("Error: One or more payload fields could not be converted to JSON-safe format.")
-                return "Payload creation failed due to special characters."
-
-            # Fetch the application data from Cosmos DB using job_id
-            ranking_data = fetch_application_by_job_id(job_id)
-
-            # If no ranking data is found, create a new application
-            if not ranking_data:
-                ranking_data = create_application_for_job_id(job_id, job_questionnaire_id)
-
-            # Generate a unique ID for the ranking entry (using job_id and job_questionnaire_id)
-            unique_id = f"{job_id}_{job_questionnaire_id}_{str(uuid.uuid4())}"
-
-            # Update the ranking data with the new entry
-            ranking_data[candidate_email_safe] = {
-                "Unique_id": unique_id,
-                "ranking": ranking,
-                "conversation": conversation_safe,
-                "resume": resume_safe,
-                "job_description": job_description_safe
-            }
-
-            # Save or update the ranking data in Cosmos DB
-            save_ranking_data_to_cosmos_db(ranking_data)
-
-            return f"Ranking entry saved with unique ID: {unique_id} for candidate email: {candidate_email_safe}"
-
-        except Exception as e:
-            print(f"An error occurred in the ranking tool: {e}")
+            with open(r"services\resume_ranking\test_data\ranking_results\ranking_data.json", "r", encoding="utf-8", errors="replace") as file:
+                return json.load(file)
+        except UnicodeDecodeError as e:
+            print(f"Unicode decoding error: {e}. Problematic characters were replaced.")
+            return None
+        except json.JSONDecodeError as e:
+            print(f"Error parsing JSON: {e}")
             return None
 
 
+    # Save the ranking data to the JSON file
+    def save_ranking_data(ranking_data):
+        try:
+            with open(r"services\resume_ranking\test_data\ranking_results\ranking_data.json", "w", encoding="utf-8") as file:
+                json.dump(ranking_data, file, ensure_ascii=False)
+        except UnicodeEncodeError as e:
+            print(f"Unicode encoding error encountered: {e}. Replacing problematic characters.")
+            # Attempt to replace problematic characters
+            with open(r"services\resume_ranking\test_data\ranking_results\ranking_data.json", "w", encoding="utf-8") as file:
+                json.dump(ranking_data, file, ensure_ascii=False, errors="replace")
 
-    
 
 
     # User proxy (The user proxy is the main object that you will use to interact with the assistant)
