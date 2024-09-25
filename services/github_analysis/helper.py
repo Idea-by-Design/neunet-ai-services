@@ -5,8 +5,8 @@ import json
 import os
 
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI()
+openai.api_key = 'sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA'
+client = OpenAI(api_key='sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA')
 
 
 def extract_github_username(github_identifier):
@@ -34,7 +34,7 @@ def analyze_contributions_with_llm(repo, candidate_email, candidate_commits):
 
     
     response = client.chat.completions.create(
-        model="gpt-4-1106-preview",
+        model="gpt-4o-mini",
         messages=[{"role": "system", "content": "You are a github repository analyzer. You have been provided with the data in the repository and the candidate's commit messages. Your job is to understand the data and provide insights on the candidate's role, responsibilities, and impact based on their commits."},
                 {"role": "system", "content": "The anakysis should be of short to medium length and should cover the key aspects of the candidate's contributions. Please provide the insights in a clear and concise manner. Do not "},
                 {"role": "user", "content": context}

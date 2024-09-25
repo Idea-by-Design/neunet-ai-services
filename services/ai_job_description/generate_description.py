@@ -89,43 +89,43 @@ def fill_missing_fields_with_defaults(data):
 
 def call_openai_api(prompt):
     response = client.chat.completions.create(
-        model="gpt-4-1106-preview",
+        model="gpt-4o-mini",
         messages=[{"role": "system", "content": "You are an AI assistant that helps generate comprehensive and compelling job descriptions based on the provided data.",
                     "role": "user", "content": prompt}]
     )
     return response.choices[0].message.content
 
-def get_info_from_chatbot_or_api(job_id, field, question):
-    # Example: Call an API that interacts with the recruiter to get missing information
-    # This is a placeholder for your actual implementation
-
-    api_url = os.getenv('INFO_GATHERING_API_URL')  # Ensure you have this environment variable set
-    headers = {'Authorization': f"Bearer {os.getenv('API_TOKEN')}"}
-
-    payload = {
-        'job_id': job_id,
-        'field': field,
-        'question': question
-    }
-
-    response = requests.post(api_url, json=payload, headers=headers)
-    response_data = response.json()
-
-    return response_data.get('answer')
-
-
 # def get_info_from_chatbot_or_api(job_id, field, question):
-#     # Mock interaction for local testing
-#     mock_responses = {
-#         'title': "Software Engineer",
-#         'company_name': "TechCorp Inc.",
-#         'location': "San Francisco, CA",
-#         'type': "remote",
-#         'time_commitment': "full-time",
-#         'description': "Develop and maintain web applications.",
-#         'requirements': "Experience with Python and JavaScript.",
-#         'estimated_pay': "$100,000 - $120,000",
-#         'job_level': "Junior"
+#     # Example: Call an API that interacts with the recruiter to get missing information
+#     # This is a placeholder for your actual implementation
+
+#     api_url = os.getenv('INFO_GATHERING_API_URL')  # Ensure you have this environment variable set
+#     headers = {'Authorization': f"Bearer {os.getenv('API_TOKEN')}"}
+
+#     payload = {
+#         'job_id': job_id,
+#         'field': field,
+#         'question': question
 #     }
-#     print(f"Question: {question}")
-#     return mock_responses.get(field, "Default Answer")
+
+#     response = requests.post(api_url, json=payload, headers=headers)
+#     response_data = response.json()
+
+#     return response_data.get('answer')
+
+
+def get_info_from_chatbot_or_api(job_id, field, question):
+    # Mock interaction for local testing
+    mock_responses = {
+        'title': "Software Engineer",
+        'company_name': "TechCorp Inc.",
+        'location': "San Francisco, CA",
+        'type': "remote",
+        'time_commitment': "full-time",
+        'description': "Develop and maintain web applications.",
+        'requirements': "Experience with Python and JavaScript.",
+        'estimated_pay': "$100,000 - $120,000",
+        'job_level': "Junior"
+    }
+    print(f"Question: {question}")
+    return mock_responses.get(field, "Default Answer")

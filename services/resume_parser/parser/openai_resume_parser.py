@@ -5,8 +5,8 @@ import json
 import os
 
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI()
+openai.api_key = 'sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA'
+client = OpenAI(api_key='sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA')
 
 
 def parse_resume_json(resume_text, links=None):
@@ -77,7 +77,7 @@ def parse_resume_json(resume_text, links=None):
     """
 
     response = client.chat.completions.create(
-        model="gpt-4-1106-preview",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "You are a resume information extractor. You have been provided with the data in the resume and your job is to understand the data and extract the required information."},
             {"role": "system", "content": "When given the resume text, process and understand the data throughly and then proceed to present the extracted information in JSON format."},
