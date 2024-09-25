@@ -13,7 +13,7 @@ RESUMES_CONTAINER_NAME = config['database']['resumes_container_name']
 GITHUB_CONTAINER_NAME = config['database']['github_container_name']
 RANKING_CONTAINER_NAME = config['database']['ranking_container_name']
 JOBS_CONTAINER_NAME = config['database']['job_description_container_name']
-APPLICATION_CONTAINER_NAME = config['database']['application_container_name']
+APPLICATIONS_CONTAINER_NAME = config['database']['application_container_name']
 JOB_DESCRIPTION_QUESTIONNAIRE_CONTAINER_NAME = config['database']['job_description_questionnaire_container_name']
 # RECRUITMENT_PROCESS_CONTAINER_NAME = config['database']['recruitment_process_container_name']
 
@@ -24,7 +24,7 @@ resumes_container = database.get_container_client(RESUMES_CONTAINER_NAME)
 github_container = database.get_container_client(GITHUB_CONTAINER_NAME)
 ranking_container = database.get_container_client(RANKING_CONTAINER_NAME)
 jobs_container = database.get_container_client(JOBS_CONTAINER_NAME)
-application_container = database.get_container_client(APPLICATION_CONTAINER_NAME)
+applications_container = database.get_container_client(APPLICATIONS_CONTAINER_NAME)
 job_description_questionnaire_container = database.get_container_client(JOB_DESCRIPTION_QUESTIONNAIRE_CONTAINER_NAME)
 # recruitment_process_container = database.get_container_client(RECRUITMENT_PROCESS_CONTAINER_NAME)
 
@@ -163,3 +163,122 @@ def store_job_questionnaire(questionnaire_data):
         print(f"Questionnaire data stored successfully for {questionnaire_data['job_id']}")
     except exceptions.CosmosHttpResponseError as e:
         print(f"Failed to store Questionnaire data: {e}")
+        
+def fetch_job_description_questionnaire(job_id):
+    try:
+        # Treat job_id as a number (without quotes)
+        query = f"SELECT * FROM c WHERE c.job_id = {job_id}"
+        results = list(job_description_questionnaire_container.query_items(query=query, enable_cross_partition_query=True))
+        
+        if results:
+            print(f"Job description questionnaire fetched successfully for job ID: {job_id}")
+            return results[0]
+        else:
+            print(f"No job description questionnaire found for job ID: {job_id}")
+            return None
+    except Exception as e:
+        print(f"An error occurred while fetching job description questionnaire: {e}")
+        return None
+
+    
+    
+def fetch_resume_with_email(email):
+    try:
+        # Correcting the query to fetch the first matching document for the provided email
+        query = """
+        SELECT * 
+        FROM c
+        WHERE IS_DEFINED(c.email) AND c.email = @email
+        """
+        parameters = [
+            {"name": "@email", "value": email}
+        ]
+
+        print(f"Executing query to fetch resume for email: {email}...")
+
+        # Execute the query and retrieve only the first matching result
+        candidates = resumes_container.query_items(
+            query=query,
+            parameters=parameters,
+            enable_cross_partition_query=True
+        )
+        
+        # Return the first matched document, or None if no match
+        for candidate in candidates:
+            print("Resume fetched successfully!")
+            return candidate  # Return the first matched document
+        
+        print("No resume found for the given email.")
+        return None
+    
+    except Exception as e:
+        print(f"An error occurred while fetching resume: {e}")
+        return None
+    
+    # db_operations.py
+
+def fetch_application_by_job_id(job_id):
+    try:
+        # Define the query to fetch the document by job_id
+        query = """
+        SELECT * 
+        FROM c
+        WHERE c.job_id = @job_id
+        """
+        parameters = [
+            {"name": "@job_id", "value": job_id}
+        ]
+
+        # Query the applications container
+        results = list(applications_container.query_items(
+            query=query,
+            parameters=parameters,
+            enable_cross_partition_query=True
+        ))
+
+        # If results exist, return the first one
+        if results:
+            print(f"Application found for job ID: {job_id}")
+            return results[0]
+        else:
+            print(f"No application found for job ID: {job_id}")
+            return None
+
+    except Exception as e:
+        print(f"An error occurred while fetching application: {e}")
+        return None
+
+
+def create_application_for_job_id(job_id, job_questionnaire_id):
+    try:
+        # Create a new document with job_id, job_questionnaire_id, and unique_id
+        new_application = {
+            "job_id": job_id,
+            "job_questionnaire_id": job_questionnaire_id,
+            "id": f"{job_id}_{job_questionnaire_id}",  # Create a unique identifier
+            # Add any additional fields as required
+        }
+
+        # Insert the new document into the Cosmos DB container
+        applications_container.create_item(body=new_application)
+
+        print(f"New application created for job ID: {job_id}")
+        return new_application
+
+    except Exception as e:
+        print(f"An error occurred while creating application: {e}")
+        return None
+
+
+# Function to update the ranking data in Cosmos DB
+def save_ranking_data_to_cosmos_db(ranking_data):
+    try:
+        # We assume the data already exists if this function is called, so update it
+        if "id" in ranking_data:
+            # Update existing document
+            applications_container.replace_item(item=ranking_data["id"], body=ranking_data)
+            print(f"Ranking data successfully updated in Cosmos DB.")
+        else:
+            print("Error: No 'id' found in ranking_data, cannot update the document.")
+    except Exception as e:
+        print(f"An error occurred while saving ranking data: {e}")

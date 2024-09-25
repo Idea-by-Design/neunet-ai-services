@@ -7,7 +7,7 @@ database:
   github_container_name: "githubAnalysis"
   ranking_container_name: "ranking"  
   job_description_container_name: "jobDetails"
-  application_container_name: "applicationdb"
+  application_container_name: "applications"
   job_description_questionnaire_container_name: "jobDescriptionQuestionnaire"
 
 azure:
