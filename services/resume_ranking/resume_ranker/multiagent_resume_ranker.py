@@ -101,9 +101,10 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
                                                 0 points for no experience or no relevant evidence.
                                                 Multiply the score by the weight of the question to calculate the weighted score for that question.
 
-                                                Sum the weighted scores for all questions across all sections to get the total weighted score.
+                                                Candidate score: Sum the weighted scores for all questions across all sections to get the total weighted score.
+                                                Total Possible Score: The maximum possible score is the sum of highest score for that question (i.e. 2) multiplied weight of that question for all questions across all sections.
 
-                                                Normalize the final total score by dividing the sum of the weighted scores by the maximum possible score (which should be 2 multipled by each weight) and express this as a percentage.
+                                                Normalize the final total score by dividing the Candidate score by the Total Possible Score and express this as a percentage.
                                                                                             
                                             """,
                                             llm_config={"config_list": [{"model":"gpt-4o-mini", "api_key":api_key}], 
