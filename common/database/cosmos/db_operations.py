@@ -35,12 +35,15 @@ def upsert_resume(container, resume_data):
     except Exception as e:
         print(f"An error occurred while upserting resume: {e}")
 
-def upsert_jobDetails(container, jobData):
+def upsert_jobDetails(jobData):
     try:
         jobs_container.upsert_item(jobData)
         print(f"Job data upserted successfully!")
     except Exception as e:
         print(f"An error occurred while upserting resume: {e}")
+
+
+
 
 def fetch_candidates_with_github_links():
     try:
@@ -140,21 +143,21 @@ def fetch_recruitment_processes(job_id):
         print(f"An error occurred while fetching recruitment processes: {e}")
         return []
 
-def store_application(application_data):
-    try:
-        application_container.upsert_item(body=application_data)
-        print(f"Application data stored successfully for {application_data['id']}")
-    except exceptions.CosmosHttpResponseError as e:
-        print(f"Failed to store application data: {e}")
+# def store_application(application_data):
+#     try:
+#         application_container.upsert_item(body=application_data)
+#         print(f"Application data stored successfully for {application_data['id']}")
+#     except exceptions.CosmosHttpResponseError as e:
+#         print(f"Failed to store application data: {e}")
 
-def fetch_application(application_id):
-    try:
-        query = f"SELECT * FROM c WHERE c.id = '{application_id}'"
-        results = list(application_container.query_items(query=query, enable_cross_partition_query=True))
-        return results[0] if results else None
-    except Exception as e:
-        print(f"An error occurred while fetching application: {e}")
-        return None
+# def fetch_application(application_id):
+#     try:
+#         query = f"SELECT * FROM c WHERE c.id = '{application_id}'"
+#         results = list(application_container.query_items(query=query, enable_cross_partition_query=True))
+#         return results[0] if results else None
+#     except Exception as e:
+#         print(f"An error occurred while fetching application: {e}")
+#         return None
     
 def store_job_questionnaire(questionnaire_data):
     try:

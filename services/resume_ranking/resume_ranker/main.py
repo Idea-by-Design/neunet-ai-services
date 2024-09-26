@@ -32,7 +32,7 @@ def main():
     # candidate_email= "john.doe@example.com"
     
     
-    candidate_email= "accelaracers22@gmail.com"
+    candidate_email= "vedikas3012@gmail.com"
     resume = fetch_resume_with_email(candidate_email)
     
     # print(" resume fetched: \n", resume)

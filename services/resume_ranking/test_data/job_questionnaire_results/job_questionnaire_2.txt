@@ -1,0 +1,159 @@
+{
+    "questionnaire": {
+        "Core Job Skills": [
+            {
+                "question": "Does the candidate have experience with designing, developing, and implementing web applications?",
+                "weight": 5,
+                "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+            },
+            {
+                "question": "Does the candidate have proficiency in Python?",
+                "weight": 5,
+                "scoring": "2 points for direct experience, 1 point for familiarity, 0 points for no experience."
+            },
+            {
+                "question": "Does the candidate have proficiency in JavaScript?",
+                "weight": 5,
+                "scoring": "2 points for direct experience, 1 point for familiarity, 0 points for no experience."
+            },
+            {
+                "question": "Does the candidate have experience with version control systems like Git?",
+                "weight": 4,
+                "scoring": "2 points for direct experience, 1 point for familiarity, 0 points for no experience."
+            },
+            {
+                "question": "Does the candidate have strong problem-solving and analytical skills?",
+                "weight": 4,
+                "scoring": "2 points for demonstrated experience, 1 point for potential, 0 points for no experience."
+            },
+            {
+                "question": "Does the candidate have experience with front-end and back-end development frameworks and libraries?",
+                "weight": 4,
+                "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+            },
+            {
+                "question": "Does the candidate have knowledge of database technologies and Web APIs?",
+                "weight": 4,
+                "scoring": "2 points for direct experience, 1 point for familiarity, 0 points for no experience."
+            },
+            {
+                "question": "Does the candidate have experience in writing clean, scalable, and well-documented code?",
+                "weight": 5,
+                "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+            }
+        ],
+        "Work History": [
+            {
+                "question": "Does the candidate have a proven track record as a Software Engineer?",
+                "weight": 5,
+                "scoring": "2 points for relevant experience, 1 point for related roles, 0 points for no experience."
+            },
+            {
+                "question": "Does the candidate have a strong portfolio of projects?",
+                "weight": 5,
+                "scoring": "2 points for a comprehensive portfolio, 1 point for partial, 0 points for none."
+            },
+            {
+                "question": "Does the candidate have consistent career progression in their work history?",
+                "weight": 3,
+                "scoring": "2 points for clear progression, 1 point for lateral moves, 0 points for inconsistent history."
+            }
+        ],
+        "Education and Certifications": [
+            {
+                "question": "Does the candidate hold a Bachelor's degree in Computer Science, Engineering, or a related field?",
+                "weight": 5,
+                "scoring": "2 points for a relevant degree, 1 point for equivalent experience, 0 points for no degree."
+            },
+            {
+                "question": "Does the candidate have any relevant certifications in software engineering or related fields?",
+                "weight": 3,
+                "scoring": "2 points for relevant certifications, 1 point for general certifications, 0 points for none."
+            }
+        ],
+        "Location and Work Eligibility": [
+            {
+                "question": "Is the candidate currently located in or willing to relocate to San Francisco, CA?",
+                "weight": 4,
+                "scoring": "2 points for current location, 1 point for willingness to relocate, 0 points for unwillingness."
+            },
+            {
+                "question": "Is the candidate eligible to work remotely in the specified location?",
+                "weight": 5,
+                "scoring": "2 points for full eligibility, 1 point for partial eligibility, 0 points for ineligibility."
+            }
+        ],
+        "Industry and Domain Expertise": [
+            {
+                "question": "Does the candidate have experience in the technology industry?",
+                "weight": 4,
+                "scoring": "2 points for direct experience, 1 point for related industries, 0 points for no experience."
+            },
+            {
+                "question": "Does the candidate have familiarity with digital transformation initiatives?",
+                "weight": 3,
+                "scoring": "2 points for direct experience, 1 point for awareness, 0 points for no experience."
+            }
+        ],
+        "Transferable Skills": [
+            {
+                "question": "Does the candidate have experience with cloud technologies (e.g., AWS, Azure)?",
+                "weight": 3,
+                "scoring": "2 points for direct experience, 1 point for familiarity, 0 points for no experience."
+            },
+            {
+                "question": "Does the candidate have skills in related programming languages or technologies?",
+                "weight": 3,
+                "scoring": "2 points for direct experience, 1 point for familiarity, 0 points for no experience."
+            }
+        ],
+        "Career Impact and Initiative": [
+            {
+                "question": "Has the candidate taken any initiatives that positively impacted their previous roles?",
+                "weight": 4,
+                "scoring": "2 points for significant initiatives, 1 point for minor contributions, 0 points for no initiatives."
+            },
+            {
+                "question": "Has the candidate received any awards or recognitions in their career?",
+                "weight": 3,
+                "scoring": "2 points for notable awards, 1 point for minor recognitions, 0 points for none."
+            },
+            {
+                "question": "Does the candidate have experience in leadership roles or mentoring others?",
+                "weight": 4,
+                "scoring": "2 points for direct experience, 1 point for informal mentoring, 0 points for no experience."
+            }
+        ],
+        "Language Proficiency": [
+            {
+                "question": "Does the candidate have proficiency in any languages required for the role?",
+                "weight": 3,
+                "scoring": "2 points for fluency, 1 point for basic knowledge, 0 points for no knowledge."
+            }
+        ],
+        "Cultural Fit": [
+            {
+                "question": "Does the candidate have experience collaborating in cross-functional teams?",
+                "weight": 4,
+                "scoring": "2 points for direct experience, 1 point for related experience, 0 points for no experience."
+            },
+            {
+                "question": "Has the candidate taken on mentorship roles in previous positions?",
+                "weight": 3,
+                "scoring": "2 points for direct experience, 1 point for informal mentorship, 0 points for no experience."
+            },
+            {
+                "question": "Is the candidate adaptable to changing work environments and team dynamics?",
+                "weight": 4,
+                "scoring": "2 points for demonstrated adaptability, 1 point for potential, 0 points for no experience."
+            }
+        ]
+    },
+    "job_id": 123456,
+    "id": "123456_20240915203729",
+    "_rid": "pEIVAN8TowoBAAAAAAAAAA==",
+    "_self": "dbs/pEIVAA==/colls/pEIVAN8Towo=/docs/pEIVAN8TowoBAAAAAAAAAA==/",
+    "_etag": "\"2001d147-0000-0100-0000-66e77dc80000\"",
+    "_attachments": "attachments/",
+    "_ts": 1726447048
+}
