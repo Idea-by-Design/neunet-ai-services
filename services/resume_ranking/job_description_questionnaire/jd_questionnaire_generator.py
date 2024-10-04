@@ -24,7 +24,7 @@ def generate_questionnaire(job_description):
     - Structure each question to focus on how well the candidate demonstrates proficiency and relevance to the role.
 
     2. **Work History:**  
-    - **Instruction:** Create questions that examine the candidate's career trajectory, job role consistency, and the relevancy of past employers.
+    - **Instruction:** Create questions that examine the candidate's career trajectory, job role consistency, required years of experience and the relevancy of past employers.
       Consider the duration spent in each role, any promotions or lateral moves, and how non-linear career paths (such as gaps) may represent development rather than red flags.
       Ensure these questions accommodate different career paths.  
     - Example: Has the candidate shown progression through promotions or changes in job titles?

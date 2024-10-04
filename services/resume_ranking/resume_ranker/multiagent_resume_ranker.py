@@ -200,7 +200,7 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
             "properties": {
                 "candidate_email": {"type": "string", "description": "The email of the candidate"},
                 "ranking": {"type": "number", "description": "The ranking value"},
-                "conversation": {"type": "string", "description": "The output of resume analyst"},
+                "conversation": {"type": "string", "description": "The complete output of resume analyst before giving to score calculator analyst."},
                 "resume": {"type": "string", "description": "The resume"}
             },
             "required": ["candidate_email", "ranking", "conversation", "resume"]
