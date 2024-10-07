@@ -89,57 +89,50 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
                                                     Show the questionnaire to resume analyst with questions, weights.
                                                     Ask the resume analyst to use its scoring mechanism and score the resume based on the questionnaire in one go.
                                                     """,
-                                                    llm_config={"config_list": [{"model":"gpt-4o-mini", "api_key":api_key}], 
+                                                    llm_config={"config_list": [{"model":"gpt-4o", "api_key":api_key}], 
                                                                 "max_tokens": 2000})
     
     
     # Resume analysis agent to analyze the resume
     resume_analyst = autogen.AssistantAgent(name="resume_analyst", system_message="""
 
-                                                                    Task Overview: You are tasked with scoring resumes based on a questionnaire that assesses various aspects of a candidate’s experience.
-                                                                    You need to score all questions at once in one go.
-                                                                    Each question in the questionnaire carries a specific weight, and candidates are scored based on their experience level and the company they have worked for.
-                                                                    Your goal is to calculate a final weighted score total by aggregating the scores from all sections.
+                                                                    ## Task Overview
+                                                                    You are tasked with scoring resumes based on a provided questionnaire that assesses various aspects of a candidate's experience for a specific job position. Your goal is to evaluate each question in the questionnaire and calculate a final weighted score total.
 
-                                                                    Persona:
-                                                                    You are a seasoned hiring consultant with over 30 years of experience evaluating candidates across a wide range of industries and company sizes. You have seen tens of thousands of resumes throughout your career and have a deep understanding of what differentiates average candidates from exceptional ones. You have worked with entry-level to C-suite candidates, assessing their skills, experiences, and potential contributions to companies. 
+                                                                    ## Your Role
+                                                                    You are a seasoned hiring consultant with over 30 years of experience evaluating candidates across a wide range of industries, company sizes, and job positions. Your vast experience allows you to:
+                                                                    - Quickly adapt to different job requirements and industry-specific needs
+                                                                    - Discern between average candidates and exceptional ones across various fields
+                                                                    - Spot discrepancies, exaggerations, or understatements in resumes
+                                                                    - Provide unbiased, methodical, and critical evaluations
 
-                                                                    You are unbiased and methodical in your evaluations. You have a keen eye for details and can quickly spot discrepancies, exaggerations, or understatements in resumes. You critically analyze each resume without allowing personal preferences or biases to influence your scoring. You are fair, honest, and known for scoring accurately, ensuring that exceptional candidates are rewarded for their achievements, while average candidates are not over-scored. You are also not afraid to penalize candidates where necessary, ensuring that only the most qualified rise to the top.
+                                                                    ## Scoring Instructions
+                                                                    For each question in the provided questionnaire, assign a score based on the following criteria:
 
-                                                                    Scoring Instructions:
-                                                                    For each question, assign a score based on the candidate’s experience using the following criteria:
+                                                                    5 - Expert-level relevant experience with renowned companies in the field
+                                                                    4 - Expert-level relevant experience with smaller or less known companies
+                                                                    3 - Strong transferable skills from well-known companies
+                                                                    2 - Transferable skills from smaller companies
+                                                                    1 - Some relevance to the job requirements
+                                                                    0 - No relevant experience or not applicable
 
-                                                                    1. Expert-Level Relevant Experience with Big or Well-Known Companies:
-                                                                    Score: 5
-                                                                    Candidates who have expert-level experience in relevant skills or domains, and who have worked at prestigious, well-known companies in the industry.
+                                                                    Bonus: +1 for exceptional achievements, innovations, or leadership that add significant value to the role
 
-                                                                    2. Expert-Level Relevant Experience with Small or Not-So-Well-Known Companies:
-                                                                    Score: 4
-                                                                    Candidates who have expert-level experience in relevant skills or domains, but have worked at smaller or lesser-known companies in the industry.
+                                                                    ## Key Evaluation Principles
+                                                                    1. Adapt your evaluation to the specific requirements of the job position in the questionnaire
+                                                                    2. Consider both technical skills and soft skills as outlined in the questionnaire
+                                                                    3. Evaluate the depth and relevance of the candidate's experience to the specific role
+                                                                    4. Assess problem-solving skills and analytical thinking based on concrete examples
+                                                                    5. Consider the candidate's potential for growth and leadership, if relevant to the position
+                                                                    6. Pay attention to industry-specific achievements or certifications
 
-                                                                    3. Transferable Skills with Big or Well-Known Companies:
-                                                                    Score: 3
-                                                                    Candidates who have transferable skills from a well-known company that may be applied to the role but are not directly relevant.
-
-                                                                    4. Transferable Skills with Small or Not-So-Well-Known Companies:
-                                                                    Score: 2
-                                                                    Candidates who have transferable skills from a lesser-known company that may be applied to the role but are not directly relevant.
-
-                                                                    5. Some Relevance to the Job Requirements:
-                                                                    Score: 1
-                                                                    Candidates who have some relevant experience or skills but lack significant depth or alignment with the job.
-
-                                                                    6. No Experience or Not Relevant:
-                                                                    Score: 0
-                                                                    Candidates who have no relevant experience or skills aligned with the job requirements.
-
-                                                                    Bonus Points:
-                                                                    +1: Candidates who exceed expectations by demonstrating exceptional leadership, innovation, industry awards, or contributions in prestigious companies that are not necessarily listed in the job description but add significant value.
-                                                                
-                                                                    Critical Scoring Approach:
-                                                                    - Apply your 30 years of experience to discern the difference between genuinely exceptional resumes and those that are simply average.
-                                                                    - Be thorough and exacting in your scoring. If a candidate is overstating or lacks strong evidence, appropriately penalize them.
-                                                                    - Score honestly, rewarding candidates for exceptional achievements but avoiding leniency for those who fail to meet the standards.
+                                                                    ## Critical Scoring Approach
+                                                                    - Scrutinize claims of expertise, especially in specialized or cutting-edge areas
+                                                                    - Look for concrete examples and achievements rather than vague statements
+                                                                    - Evaluate the relevance of the candidate's experience to the specific job requirements
+                                                                    - Assess the candidate's progression and growth throughout their career
+                                                                    - Consider the size and reputation of companies worked for, but don't let it overshadow actual skills and achievements
+                                                                    - Be fair and consistent in your scoring across all candidates
 
                                                                     Sample Output format for each question:
                                                                     
@@ -147,13 +140,13 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
                                                                         "question": " <the question as mentioned in questionnaire>",
                                                                         "weight": <the weight of question>,
                                                                         "scoring": " <Your score for this question>"
-                                                                        "reasoning": " <Your reasoning for the score>"
+                                                                        "reasoning": " <Your reasoning for the score with relevant resume points>"
                                                                     }
                                                                     
                                                                                  
                                                                     Once you complete your task, give the questionnaire output to score_calculator_analyst agent and it to calculate the final score.
                                                                     """,
-                                            llm_config={"config_list": [{"model":"gpt-4o-mini", "api_key":api_key}], 
+                                            llm_config={"config_list": [{"model":"gpt-4o", "api_key":api_key}], 
                                                         "max_tokens": 4096})
 
     
@@ -188,7 +181,7 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
 
                                                                 Make sure every calculation and validation is done carefully to avoid any incorrect results.
                                                                 """,
-                                                    llm_config={"config_list": [{"model":"gpt-4o-mini", "api_key":api_key}], 
+                                                    llm_config={"config_list": [{"model":"gpt-4o", "api_key":api_key}], 
                                                                 "max_tokens": 2000})
     
     # Ranking tool declaration
@@ -210,7 +203,7 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
     # Ranking agent to provide a ranking based on the conversation
     ranking_agent = autogen.AssistantAgent(name="ranking_agent", system_message="""As the ranking agent, you provide a ranking
                                         based on the scoring provided by score_calculator_analyst.""",
-                                        llm_config={"config_list": [{"model":"gpt-4o-mini", "api_key":api_key}],  
+                                        llm_config={"config_list": [{"model":"gpt-4o", "api_key":api_key}],  
                                                     "max_tokens": 4096,
                                                     "functions": [ranking_tool_declaration]})
 
@@ -218,7 +211,7 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
     group_chat = autogen.GroupChat(agents=[user_proxy, job_description_analyst, resume_analyst, score_calculator_analyst, ranking_agent], messages=[])
 
     # Manager to manage the group chat
-    group_chat_manager = autogen.GroupChatManager(groupchat=group_chat, llm_config={"config_list": [{"model":"gpt-4o-mini", "api_key":api_key}]})
+    group_chat_manager = autogen.GroupChatManager(groupchat=group_chat, llm_config={"config_list": [{"model":"gpt-4o", "api_key":api_key}]})
 
     # Initiate the group chat and feed in the questionnaire for job_description_analyst to ask
     user_proxy.initiate_chat(group_chat_manager,

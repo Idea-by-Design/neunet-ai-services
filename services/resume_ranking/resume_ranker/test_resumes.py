@@ -10,8 +10,8 @@ log_file_path = os.path.join(os.getcwd(), 'resume_ranking.log')
 logging.basicConfig(filename=log_file_path, level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Load environment variables
-load_dotenv()
+# # Load environment variables
+# load_dotenv()
 
 def rank_resume_for_candidate(job_description_id, candidate_email):
     try:
@@ -38,25 +38,34 @@ def rank_resume_for_candidate(job_description_id, candidate_email):
 
 def main():
     # List of email IDs
+#     email_list = [
+#     # Good resumes:
+#     "ganeshthanu17@gmail.com",
+#     "khushilmodi17@gmail.com",
+#     "suryasaith@gmail.com",
+#     "saitulasi1729@gmail.com",
+#     "abireads01@outlook.com",
+#     "amit.bh@gatech.edu",
+#     "pinki22shiv2016@gmail.com",
+    
+#     # Bad resumes:
+#     "Benjamin.Rohrs@gmail.com",
+#     "minal.patilr30@gmail.com",
+#     "srilalithamv18@gmail.com",
+#     "rishikotadiya1711@gmail.com",
+#     "guillem.cobos93@gmail.com",
+#     "khan27@jhu.edu"
+# ]
+
+# single test email
+    
     email_list = [
-        "garvitjain1857@gmail.com",
-        "minhthangminh1992@gmail.com",
-        "chrisgodev@gmail.com",
-        "jlucusjobs@gmail.com",
-        "jay3183@gmail.com",
-        "arjunnambiar.nk@gmail.com",
-        "anthonytilotta303@gmail.com",
-        "ravidharnia151@gmail.com",
-        "codyrowirth@yahoo.com",
-        "suhailroyeen@gmail.com",
-        "ayanpatel_98@yahoo.com",
-        "scott815@gmail.com",
-        "ycheng345@gatech.edu",
-        "rdfx2@proton.me"
-    ]
+        "abireads01@outlook.com"
+    
+]
     
     # Job description ID (can be parameterized as needed)
-    job_description_id = 123457
+    job_description_id = 123486
     
     # Loop through the email list and rank each resume
     for email in email_list:
