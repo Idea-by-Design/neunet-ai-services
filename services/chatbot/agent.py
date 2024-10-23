@@ -258,3 +258,5 @@ if __name__ == "__main__":
     job_id = "job-12345"
     result = initiate_chat(recruiter_request, job_id)
     print(result)
+
+    
