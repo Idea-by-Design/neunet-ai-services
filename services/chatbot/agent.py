@@ -13,17 +13,18 @@ from common.database.cosmos.db_operations import (
     fetch_candidate_rankings,
     store_candidate_ranking,
     fetch_github_analysis,
-    update_recruitment_process
+    update_recruitment_process,
+    fetch_top_candidates_by_percentage
 )
 
 # Load environment variables
 load_dotenv()
 
 # Fetch API key from environment
-api_key = os.getenv("OPENAI_API_KEY")
+api_key = 'sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA'
 
 # Configuration for AI models
-config_list = [{"model": "gpt-3.5-turbo", "api_key": api_key}]
+config_list = [{"model": "gpt-4o", "api_key": api_key}]
 
 def is_termination_msg(message):
     return message.get("content") and "TERMINATE" in message["content"]
@@ -255,7 +256,7 @@ def initiate_chat(recruiter_request: str, job_id: str) -> str:
 
 if __name__ == "__main__":
     recruiter_request = "Find top candidates for Job1 and schedule interviews"
-    job_id = "job-12345"
+    job_id = "123486"
     result = initiate_chat(recruiter_request, job_id)
     print(result)
 

@@ -285,3 +285,35 @@ def save_ranking_data_to_cosmos_db(ranking_data):
             print("Error: No 'id' found in ranking_data, cannot update the document.")
     except Exception as e:
         print(f"An error occurred while saving ranking data: {e}")
+
+def fetch_top_candidates_from_results(results, percentage=10):
+    
+    """
+    This function is should be called after fetch_application_by_job_id function. 
+    This function takes in put the final result output from the fetch_application_by_job_id function.
+    
+    """
+    try:
+        # Extract the candidate information from the results
+        candidate_data = []
+        for email, candidate_info in results.items():
+            if isinstance(candidate_info, dict) and "ranking" in candidate_info:
+                candidate_data.append({
+                    "email": email.replace('"', ''),  # Clean up the email key
+                    "ranking": candidate_info["ranking"],
+                    "conversation": candidate_info.get("conversation", ""),
+                    "resume": candidate_info.get("resume", "")
+                })
+
+        # Sort candidates by ranking in descending order (higher ranking first)
+        sorted_candidates = sorted(candidate_data, key=lambda x: x["ranking"], reverse=True)
+
+        # Calculate the top percentage number of candidates to return
+        top_count = max(1, int(len(sorted_candidates) * (percentage / 100)))
+
+        # Return the top percentage candidates
+        return sorted_candidates[:top_count]
+
+    except Exception as e:
+        print(f"An error occurred while fetching top candidates: {e}")
+        return None
