@@ -38,7 +38,7 @@ fetcher_agent = autogen.AssistantAgent(
                     "type": "object",
                     "properties": {
                         "job_id": {
-                            "type": "string",
+                            "type": "number",
                             "description": "The job ID for which to fetch the application data."
                         }
                     },
@@ -79,7 +79,7 @@ fetcher_agent.register_function(
 groupchat = autogen.GroupChat(
     agents=[user_proxy, fetcher_agent],
     messages=[],
-    max_round=50,
+    max_round=5,
 )
 manager = autogen.GroupChatManager(groupchat=groupchat, llm_config={
     "config_list": config_list,
@@ -90,17 +90,17 @@ manager = autogen.GroupChatManager(groupchat=groupchat, llm_config={
 def initiate_chat():
     user_proxy.initiate_chat(manager, message="I want top 10% candidates for job ID 123486")
 
-    # Example of how the fetcher agent would process the request
-    job_id = "123486"
-    percentage = 10
-    application_data = fetch_application_by_job_id(job_id)
+    # # Example of how the fetcher agent would process the request
+    # job_id = 123486
+    # percentage = 10
+    # application_data = fetch_application_by_job_id(job_id)
 
-    if application_data:
-        top_candidates = fetch_top_candidates_from_results(application_data, percentage)
+    # if application_data:
+    #     top_candidates = fetch_top_candidates_from_results(application_data, percentage)
 
-        if top_candidates:
-            for candidate in top_candidates:
-                print(f"Name: {candidate['email']}, Ranking: {candidate['ranking']}, Email: {candidate['email']}")
+    #     if top_candidates:
+    #         for candidate in top_candidates:
+    #             print(f"Name: {candidate['email']}, Ranking: {candidate['ranking']}, Email: {candidate['email']}")
 
     # Terminate the agent session
     print("TERMINATE")
