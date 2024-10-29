@@ -53,16 +53,16 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
             # Generate a unique ID for the ranking entry (using job_id and job_questionnaire_id)
             unique_id = f"{job_id}_{job_questionnaire_id}_{str(uuid.uuid4())}"
 
-            # Update the ranking data with the new entry
-            ranking_data[candidate_email_safe] = {
-                "Unique_id": unique_id,
-                "ranking": ranking,
-                "conversation": conversation_safe,
-                "resume": resume_safe,
-            }
+            # # Update the ranking data with the new entry
+            # ranking_data[candidate_email_safe] = {
+            #     "Unique_id": unique_id,
+            #     "ranking": ranking,
+            #     "conversation": conversation_safe,
+            #     "resume": resume_safe,
+            # }
 
-            # Save or update the ranking data in Cosmos DB
-            save_ranking_data_to_cosmos_db(ranking_data)
+            # Save or update the ranking data in Cosmos DB using the new structure
+            save_ranking_data_to_cosmos_db(ranking_data, candidate_email, ranking, conversation, resume)
 
             return f"Ranking entry saved with unique ID: {unique_id} for candidate email: {candidate_email_safe}"
 

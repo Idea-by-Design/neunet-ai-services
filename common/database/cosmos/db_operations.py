@@ -222,34 +222,28 @@ def fetch_resume_with_email(email):
 
 def fetch_application_by_job_id(job_id):
     try:
-        # Define the query to fetch the document by job_id
         query = """
         SELECT * 
         FROM c
         WHERE c.job_id = @job_id
         """
-        parameters = [
-            {"name": "@job_id", "value": job_id}
-        ]
-
-        # Query the applications container
+        parameters = [{"name": "@job_id", "value": job_id}]
         results = list(applications_container.query_items(
             query=query,
             parameters=parameters,
             enable_cross_partition_query=True
         ))
 
-        # If results exist, return the first one
         if results:
             print(f"Application found for job ID: {job_id}")
             return results[0]
         else:
             print(f"No application found for job ID: {job_id}")
             return None
-
     except Exception as e:
         print(f"An error occurred while fetching application: {e}")
         return None
+
 
 
 def create_application_for_job_id(job_id, job_questionnaire_id):
@@ -273,18 +267,39 @@ def create_application_for_job_id(job_id, job_questionnaire_id):
         return None
 
 
-# Function to update the ranking data in Cosmos DB
-def save_ranking_data_to_cosmos_db(ranking_data):
+def save_ranking_data_to_cosmos_db(ranking_data, candidate_email, ranking, conversation, resume):
     try:
-        # We assume the data already exists if this function is called, so update it
+        # Check if "candidates" key exists in ranking_data
+        if "candidates" not in ranking_data:
+            ranking_data["candidates"] = []
+
+        # Check if candidate already exists based only on email
+        for candidate in ranking_data["candidates"]:
+            if candidate["email"].lower() == candidate_email.lower():  # Case-insensitive email comparison
+                # Return early indicating the candidate has already applied
+                return f"Error: The candidate with email {candidate_email} has already applied."
+
+        # If candidate doesn't exist, add a new entry
+        new_candidate = {
+            "email": candidate_email,
+            "ranking": ranking,
+            "conversation": conversation,
+            "resume": resume
+        }
+        ranking_data["candidates"].append(new_candidate)
+
+        # Update existing document
         if "id" in ranking_data:
-            # Update existing document
             applications_container.replace_item(item=ranking_data["id"], body=ranking_data)
-            print(f"Ranking data successfully updated in Cosmos DB.")
+            print(f"Ranking data successfully updated in Cosmos DB for {candidate_email}.")
+            return f"Success: The candidate with email {candidate_email} has been added."
         else:
-            print("Error: No 'id' found in ranking_data, cannot update the document.")
+            return "Error: No 'id' found in ranking_data, cannot update the document."
     except Exception as e:
         print(f"An error occurred while saving ranking data: {e}")
+        return f"An error occurred: {e}"
+
+
 
 def fetch_top_candidates_from_results(results, percentage=10):
     

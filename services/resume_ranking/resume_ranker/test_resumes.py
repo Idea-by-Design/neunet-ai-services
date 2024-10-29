@@ -1,9 +1,10 @@
 import os
 import json
+import logging
+import time
 from dotenv import load_dotenv
 from services.resume_ranking.resume_ranker.multiagent_resume_ranker import initiate_chat
 from common.database.cosmos.db_operations import fetch_job_description, fetch_job_description_questionnaire, fetch_resume_with_email
-import logging
 
 # Set up logging
 log_file_path = os.path.join(os.getcwd(), 'resume_ranking.log')
@@ -37,33 +38,29 @@ def rank_resume_for_candidate(job_description_id, candidate_email):
         return None
 
 def main():
-    # List of email IDs
-#     email_list = [
-#     # Good resumes:
-#     "ganeshthanu17@gmail.com",
-#     "khushilmodi17@gmail.com",
-#     "suryasaith@gmail.com",
-#     "saitulasi1729@gmail.com",
-#     "abireads01@outlook.com",
-#     "amit.bh@gatech.edu",
-#     "pinki22shiv2016@gmail.com",
-    
-#     # Bad resumes:
-#     "Benjamin.Rohrs@gmail.com",
-#     "minal.patilr30@gmail.com",
-#     "srilalithamv18@gmail.com",
-#     "rishikotadiya1711@gmail.com",
-#     "guillem.cobos93@gmail.com",
-#     "khan27@jhu.edu"
-# ]
+    # Record start time
+    start_time = time.time()
 
-# single test email
-    
+    # List of email IDs
     email_list = [
-        "abireads01@outlook.com"
-    
-]
-    
+        # Good resumes:
+        "ganeshthanu17@gmail.com",
+        "khushilmodi17@gmail.com",
+        "suryasaith@gmail.com",
+        "saitulasi1729@gmail.com",
+        "abireads01@outlook.com",
+        "amit.bh@gatech.edu",
+        "pinki22shiv2016@gmail.com",
+
+        # Bad resumes:
+        "Benjamin.Rohrs@gmail.com",
+        "minal.patilr30@gmail.com",
+        "srilalithamv18@gmail.com",
+        "rishikotadiya1711@gmail.com",
+        "guillem.cobos93@gmail.com",
+        "khan27@jhu.edu"
+    ]
+
     # Job description ID (can be parameterized as needed)
     job_description_id = 123486
     
@@ -75,6 +72,16 @@ def main():
             logging.info(f"Result for {email}: {result}")
         else:
             logging.error(f"Failed to rank resume for {email}")
+
+    # Record end time
+    end_time = time.time()
+
+    # Calculate total time taken
+    total_time = end_time - start_time
+
+    # Log and print the total time taken
+    logging.info(f"Total time taken for resume ranking: {total_time:.2f} seconds.")
+    print(f"Total time taken for resume ranking: {total_time:.2f} seconds.")   # Total time taken for resume ranking: 130.07 seconds.
 
 if __name__ == "__main__":
     main()
