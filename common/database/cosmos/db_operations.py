@@ -301,7 +301,7 @@ def save_ranking_data_to_cosmos_db(ranking_data, candidate_email, ranking, conve
 
 
 
-def fetch_top_k_candidates_by_job_id(job_id, percentage=10):
+def fetch_top_k_candidates_by_percentage(job_id, percentage=10):
     try:
         # Define the query to fetch only email and ranking from the candidates array
         query = """
@@ -346,3 +346,47 @@ def fetch_top_k_candidates_by_job_id(job_id, percentage=10):
     except Exception as e:
         print(f"An error occurred while fetching application: {e}")
         return None
+    
+def fetch_top_k_candidates_by_count(job_id, top_k=10):
+    try:
+        # Define the query to fetch only email and ranking from the candidates array
+        query = """
+        SELECT candidate.email, candidate.ranking
+        FROM c
+        JOIN candidate IN c.candidates
+        WHERE c.job_id = @job_id
+        """
+        parameters = [
+            {"name": "@job_id", "value": job_id}
+        ]
+
+        # Query the applications container
+        results = list(applications_container.query_items(
+            query=query,
+            parameters=parameters,
+            enable_cross_partition_query=True
+        ))
+
+        # If results exist, format them into the required output
+        if results:
+            print(f"Application found for job ID: {job_id}")
+
+            # Prepare the formatted output with only email and ranking
+            candidate_list = [{"email": result["email"], "ranking": result["ranking"]}
+                              for result in results]
+
+            # Sort candidates by ranking in descending order
+            sorted_candidates = sorted(candidate_list, key=lambda x: x['ranking'], reverse=True)
+
+            # Return the top k candidates
+            top_candidates = sorted_candidates[:top_k]
+            return {"top_candidates": top_candidates}
+
+        else:
+            print(f"No application found for job ID: {job_id}")
+            return None
+
+    except Exception as e:
+        print(f"An error occurred while fetching application: {e}")
+        return None
+

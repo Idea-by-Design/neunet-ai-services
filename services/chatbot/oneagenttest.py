@@ -1,6 +1,6 @@
 import autogen
 import os
-from common.database.cosmos.db_operations import fetch_top_k_candidates_by_job_id
+from common.database.cosmos.db_operations import fetch_top_k_candidates_by_count, fetch_top_k_candidates_by_percentage
 
 # Fetch the API key from environment variables
 api_key = os.getenv("OPENAI_API_KEY")
@@ -30,7 +30,7 @@ executor_agent = autogen.AssistantAgent(
         "config_list": config_list,
         "functions": [
             {
-                "name": "fetch_top_k_candidates_by_job_id",
+                "name": "fetch_top_k_candidates_by_percentage",
                 "description": "Fetches the top percentage of candidates (email and ranking only) for a given job ID.",
                 "parameters": {
                     "type": "object",
@@ -46,6 +46,24 @@ executor_agent = autogen.AssistantAgent(
                     },
                     "required": ["job_id"]
                 }
+            },
+            {
+                "name": "fetch_top_k_candidates_by_count",
+                "description": "Fetches the top count of candidates (email and ranking only) for a given job ID.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "job_id": {
+                            "type": "number",
+                            "description": "The job ID for which to fetch the application data."
+                        },
+                        "percentage": {
+                            "type": "number",
+                            "description": "The count of top candidates to fetch, defaults to 10."
+                        }
+                    },
+                    "required": ["job_id"]
+                }
             }
         ]
     },
@@ -53,10 +71,10 @@ executor_agent = autogen.AssistantAgent(
 
 
 # Register the functions with the executor agent
-# Register the single function with the executor agent
 executor_agent.register_function(
     function_map={
-        "fetch_top_k_candidates_by_job_id": fetch_top_k_candidates_by_job_id,
+        "fetch_top_k_candidates_by_percentage": fetch_top_k_candidates_by_percentage,
+        "fetch_top_k_candidates_by_count": fetch_top_k_candidates_by_count,
     }
 )
 
@@ -65,9 +83,19 @@ executor_agent.register_function(
 
 # Define the Fetcher Agent
 fetcher_agent_prompt = '''
-This agent is responsible for fetching the top percentage of candidates for a given job ID.
-It will ask the executor agent to run the function `fetch_top_k_candidates_by_job_id`, which fetches both the candidate data and sorts it to return the top percentage.
-Once the information is fetched, it will print the top candidates' email IDs and rankings.
+You are a Candidate Fetching Agent responsible for retrieving the top candidates for a given job ID.
+
+Task:
+Understand the request:
+-If the user requests candidates by count, call the executor to run fetch_top_k_candidates_by_count.
+-If the request is by percentage, call the executor to run fetch_top_k_candidates_by_percentage.
+-For non-standard requests (e.g., total number of candidates):
+    Improvise by using available functions creatively. For instance, if the user wants the total number of candidates, run the fetch_top_k_candidates_by_percentage function with 100% and count the results.
+-If no function can fulfill the request, inform the user that only count or percentage-based fetching is supported and suggest alternatives.
+
+Return the results:
+Output the top candidates' email IDs and rankings after fetching.
+Ensure the result is properly sorted and concise.
 '''
 fetcher_agent = autogen.AssistantAgent(
     name="top_candidate_fetcher",
