@@ -317,3 +317,46 @@ def fetch_top_candidates_from_results(results, percentage=10):
     except Exception as e:
         print(f"An error occurred while fetching top candidates: {e}")
         return None
+
+def fetch_candidates_from_application_by_job_id(job_id):
+    try:
+        # Define the query to fetch the document by job_id
+        query = """
+        SELECT * 
+        FROM c
+        WHERE c.job_id = @job_id
+        """
+        parameters = [
+            {"name": "@job_id", "value": job_id}
+        ]
+
+        # Query the applications container
+        results = list(applications_container.query_items(
+            query=query,
+            parameters=parameters,
+            enable_cross_partition_query=True
+        ))
+
+        # If results exist, format them into the required output
+        if results:
+            print(f"Application found for job ID: {job_id}")
+            application = results[0]
+
+            # Prepare the formatted output
+            output = {"results": []}
+
+            # Iterate over the application keys and extract email and ranking
+            for key, value in application.items():
+                if key.startswith('"') and key.endswith('"'):  # Filtering email keys
+                    email = key.strip('"')  # Remove surrounding quotes
+                    ranking = value.get('ranking')
+                    output["results"].append({"email": email, "ranking": ranking})
+
+            return output
+        else:
+            print(f"No application found for job ID: {job_id}")
+            return None
+
+    except Exception as e:
+        print(f"An error occurred while fetching application: {e}")
+        return None
