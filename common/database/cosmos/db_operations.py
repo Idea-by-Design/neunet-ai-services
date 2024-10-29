@@ -301,44 +301,13 @@ def save_ranking_data_to_cosmos_db(ranking_data, candidate_email, ranking, conve
 
 
 
-def fetch_top_candidates_from_results(results, percentage=10):
-    
-    """
-    This function is should be called after fetch_application_by_job_id function. 
-    This function takes in put the final result output from the fetch_application_by_job_id function.
-    
-    """
+def fetch_top_k_candidates_by_job_id(job_id, percentage=10):
     try:
-        # Extract the candidate information from the results
-        candidate_data = []
-        for email, candidate_info in results.items():
-            if isinstance(candidate_info, dict) and "ranking" in candidate_info:
-                candidate_data.append({
-                    "email": email.replace('"', ''),  # Clean up the email key
-                    "ranking": candidate_info["ranking"],
-                    "conversation": candidate_info.get("conversation", ""),
-                    "resume": candidate_info.get("resume", "")
-                })
-
-        # Sort candidates by ranking in descending order (higher ranking first)
-        sorted_candidates = sorted(candidate_data, key=lambda x: x["ranking"], reverse=True)
-
-        # Calculate the top percentage number of candidates to return
-        top_count = max(1, int(len(sorted_candidates) * (percentage / 100)))
-
-        # Return the top percentage candidates
-        return sorted_candidates[:top_count]
-
-    except Exception as e:
-        print(f"An error occurred while fetching top candidates: {e}")
-        return None
-
-def fetch_candidates_from_application_by_job_id(job_id):
-    try:
-        # Define the query to fetch the document by job_id
+        # Define the query to fetch only email and ranking from the candidates array
         query = """
-        SELECT * 
+        SELECT candidate.email, candidate.ranking
         FROM c
+        JOIN candidate IN c.candidates
         WHERE c.job_id = @job_id
         """
         parameters = [
@@ -355,19 +324,21 @@ def fetch_candidates_from_application_by_job_id(job_id):
         # If results exist, format them into the required output
         if results:
             print(f"Application found for job ID: {job_id}")
-            application = results[0]
 
-            # Prepare the formatted output
-            output = {"results": []}
+            # Prepare the formatted output with only email and ranking
+            candidate_list = [{"email": result["email"], "ranking": result["ranking"]}
+                              for result in results]
 
-            # Iterate over the application keys and extract email and ranking
-            for key, value in application.items():
-                if key.startswith('"') and key.endswith('"'):  # Filtering email keys
-                    email = key.strip('"')  # Remove surrounding quotes
-                    ranking = value.get('ranking')
-                    output["results"].append({"email": email, "ranking": ranking})
+            # Sort candidates by ranking in descending order
+            sorted_candidates = sorted(candidate_list, key=lambda x: x['ranking'], reverse=True)
 
-            return output
+            # Calculate the top percentage number of candidates to return
+            top_count = max(1, int(len(sorted_candidates) * (percentage / 100)))
+
+            # Return the top percentage candidates
+            top_candidates = sorted_candidates[:top_count]
+            return {"top_candidates": top_candidates}
+
         else:
             print(f"No application found for job ID: {job_id}")
             return None

@@ -1,6 +1,6 @@
 import autogen
-from common.database.cosmos.db_operations import fetch_candidates_from_application_by_job_id, fetch_top_candidates_from_results
 import os
+from common.database.cosmos.db_operations import fetch_top_k_candidates_by_job_id
 
 # Fetch the API key from environment variables
 api_key = os.getenv("OPENAI_API_KEY")
@@ -30,58 +30,44 @@ executor_agent = autogen.AssistantAgent(
         "config_list": config_list,
         "functions": [
             {
-                "name": "fetch_candidates_from_application_by_job_id",
-                "description": "Fetches the application data for a given job ID.",
+                "name": "fetch_top_k_candidates_by_job_id",
+                "description": "Fetches the top percentage of candidates (email and ranking only) for a given job ID.",
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "job_id": {
                             "type": "number",
                             "description": "The job ID for which to fetch the application data."
-                        }
-                    },
-                    "required": ["job_id"]
-                }
-            },
-            {
-                "name": "fetch_top_candidates_from_results",
-                "description": "Fetches the top percentage of candidates from the given application data.",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "results": {
-                            "type": "object",
-                            "description": "The json output from fetch_candidates_from_application_by_job_id function call from which to fetch the top candidates."
                         },
                         "percentage": {
                             "type": "number",
-                            "description": "The percentage of top candidates to fetch."
+                            "description": "The percentage of top candidates to fetch, defaults to 10%."
                         }
                     },
-                    "required": ["results", "percentage"]
+                    "required": ["job_id"]
                 }
             }
         ]
     },
 )
 
+
 # Register the functions with the executor agent
+# Register the single function with the executor agent
 executor_agent.register_function(
     function_map={
-        "fetch_candidates_from_application_by_job_id": fetch_candidates_from_application_by_job_id,
-        "fetch_top_candidates_from_results": fetch_top_candidates_from_results,
+        "fetch_top_k_candidates_by_job_id": fetch_top_k_candidates_by_job_id,
     }
 )
+
 
 
 
 # Define the Fetcher Agent
 fetcher_agent_prompt = '''
 This agent is responsible for fetching the top percentage of candidates for a given job ID.
-It will first ask the executor agent to run fetch_application_by_job_id function the fetch the application data using the job ID.
-Then it takes the resut json and asks executor agent again to run the fetch_top_candidates_from_results function using the json as argument for results and required percentage.
-Once the information is fetched, it will print the top candidates' names, rankings, and email IDs.
-
+It will ask the executor agent to run the function `fetch_top_k_candidates_by_job_id`, which fetches both the candidate data and sorts it to return the top percentage.
+Once the information is fetched, it will print the top candidates' email IDs and rankings.
 '''
 fetcher_agent = autogen.AssistantAgent(
     name="top_candidate_fetcher",
