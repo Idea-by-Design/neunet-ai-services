@@ -16,7 +16,7 @@ message = {
     },
     "recipients": {
         "to": [
-            {"address": "hemant.singh@ideaxdesign.com", "displayName": "Recipient Name"}
+            {"address": "vedika.srivastava@ideaxdesign.com", "displayName": "Recipient Name"}
         ]
     },
     "senderAddress": "DoNotReply@ideaxdesign.com"

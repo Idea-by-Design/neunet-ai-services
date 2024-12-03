@@ -66,17 +66,52 @@ executor_agent = autogen.AssistantAgent(
                     },
                     "required": ["job_id"]
                 }
+            },
+            {
+                "name": "send_email",
+                "description": "Sends an email to a list of recipients.",
+                
             }
+
         ]
     },
 )
 
+
+# Integrate email sending function
+def send_email(to_addresses, subject, body_plain, body_html):
+    key = AzureKeyCredential("4GhT4z2rGEnNQuK8E1mPag9G2CmM37nHx10NUFxuLmp96A4C2cUiJQQJ99AKACULyCpDyPWLAAAAAZCSQasT")
+    endpoint = "https://neunet-communication-service.unitedstates.communication.azure.com/"
+    email_client = EmailClient(endpoint, key)
+    
+    message = {
+        "content": {
+            "subject": subject,
+            "plainText": body_plain,
+            "html": body_html,
+        },
+        "recipients": {
+            "to": [{"address": address, "displayName": "Candidate"} for address in to_addresses]
+        },
+        "senderAddress": "DoNotReply@ideaxdesign.com",
+    }
+    
+    try:
+        poller = email_client.begin_send(message)
+        print("Email send operation initiated.")
+        result = poller.result()
+        print(f"Result: {result}")
+        return {"status": "success", "details": result}
+    except Exception as ex:
+        return {"status": "error", "details": str(ex)}
+    
 
 # Register the functions with the executor agent
 executor_agent.register_function(
     function_map={
         "fetch_top_k_candidates_by_percentage": fetch_top_k_candidates_by_percentage,
         "fetch_top_k_candidates_by_count": fetch_top_k_candidates_by_count,
+        "send_email": send_email, 
     }
 )
 
@@ -112,12 +147,17 @@ email_agent_prompt = """
 You are an Email Service Agent responsible for sending emails on behalf of the group. 
 You will:
 1. Accept requests to send emails to candidates.
-2. Use the provided email addresses, subject, and message to send emails via the Azure Communication Service.
-3. Respond with success or failure status after sending the email.
+2. Use the provided email addresses and message to send emails via the Azure Communication Service.
+3. Generate properly formatted email content with appropriate subject and body.
+4. The subject should be 3-4 words summarizing the email content.
+5. The body should be a well-structured message with a clear call to action. The tone should be professional and engaging. 
+6. Respond with success or failure status after sending the email.
 
 Instructions:
 - Ensure the email content is properly formatted.
 - If any required fields are missing, ask for clarification.
+- Its your responsibility to generate appropriate subject and body for the email.
+- The end salutation should be only "Best Regards"
 """
 
 email_agent = autogen.AssistantAgent(
@@ -128,38 +168,6 @@ email_agent = autogen.AssistantAgent(
     },
 )
 
-
-# Integrate email sending function
-def send_email(to_addresses, subject, body_plain, body_html):
-    key = AzureKeyCredential("4GhT4z2rGEnNQuK8E1mPag9G2CmM37nHx10NUFxuLmp96A4C2cUiJQQJ99AKACULyCpDyPWLAAAAAZCSQasT")
-    endpoint = "https://neunet-communication-service.unitedstates.communication.azure.com/"
-    email_client = EmailClient(endpoint, key)
-    
-    message = {
-        "content": {
-            "subject": subject,
-            "plainText": body_plain,
-            "html": body_html,
-        },
-        "recipients": {
-            "to": [{"address": address, "displayName": "Candidate"} for address in to_addresses]
-        },
-        "senderAddress": "DoNotReply@ideaxdesign.com",
-    }
-    
-    try:
-        poller = email_client.begin_send(message)
-        result = poller.result()
-        return {"status": "success", "details": result}
-    except Exception as ex:
-        return {"status": "error", "details": str(ex)}
-
-# Register the email function with the EmailAgent
-email_agent.register_function(
-    function_map={
-        "send_email": send_email,
-    }
-)
 
 # Define job description creator agent
 job_desc_creator_agent_prompt = """
