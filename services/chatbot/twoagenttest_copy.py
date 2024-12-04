@@ -93,6 +93,27 @@ executor_agent = autogen.AssistantAgent(
                     },
                     "required": ["to_addresses", "subject", "body_plain"]
                 }
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "to_addresses": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "List of email addresses to send the email to."
+                        },
+                        "subject": {
+                            "type": "string",
+                            "description": "The subject of the email."
+                        },
+                        "body_plain": {
+                            "type": "string",
+                            "description": "The plain text content of the email."
+                        }
+                    },
+                    "required": ["to_addresses", "subject", "body_plain"]
+                }
                 
             }
 
@@ -113,12 +134,14 @@ def send_email(to_addresses, subject, body_plain):
             "subject": subject,
             "plainText": body_plain,
             
+            
         },
         "recipients": {
             "to": [{"address": address, "displayName": "Candidate"} for address in to_addresses]
         },
         "senderAddress": "DoNotReply@ideaxdesign.com",
     }
+    print(f"Message: {message}")
     
     try:
         poller = email_client.begin_send(message)
