@@ -9,13 +9,13 @@ api_key = os.getenv("OPENAI_API_KEY")
 
 
 # Configuration for AI models
-config_list = [{"model": "gpt-4o", "api_key": api_key}]
+config_list = [{"model": "gpt-4o-mini", "api_key": api_key}]
 
 # Define the User Proxy Agent
 user_proxy = autogen.UserProxyAgent(
     name="user_proxy",
     human_input_mode="ALWAYS",
-    max_consecutive_auto_reply=10,
+    max_consecutive_auto_reply=50,
     is_termination_msg=lambda x: x.get("content", "").rstrip().endswith("TERMINATE"),
     code_execution_config={"use_docker": False}
 )
@@ -23,7 +23,9 @@ user_proxy = autogen.UserProxyAgent(
 # Define the Executor Agent to run functions
 executor_agent_prompt = '''
 This agent executes all functions for the group. 
-It receives function requests from other agents and runs them with the provided arguments.
+It receives function requests from other agents and runs them with the provided arguments. 
+MAKE SURE TO GENERATE CORRECT ARGUMENTS BEFORE RUNNING THE FUNCTION.
+
 '''
 executor_agent = autogen.AssistantAgent(
     name="function_executor_agent",
@@ -70,6 +72,27 @@ executor_agent = autogen.AssistantAgent(
             {
                 "name": "send_email",
                 "description": "Sends an email to a list of recipients.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "to_addresses": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "List of email addresses to send the email to."
+                        },
+                        "subject": {
+                            "type": "string",
+                            "description": "The subject of the email."
+                        },
+                        "body_plain": {
+                            "type": "string",
+                            "description": "The plain text content of the email."
+                        }
+                    },
+                    "required": ["to_addresses", "subject", "body_plain"]
+                }
                 
             }
 
@@ -79,7 +102,8 @@ executor_agent = autogen.AssistantAgent(
 
 
 # Integrate email sending function
-def send_email(to_addresses, subject, body_plain, body_html):
+def send_email(to_addresses, subject, body_plain):
+    print("send email function called")
     key = AzureKeyCredential("4GhT4z2rGEnNQuK8E1mPag9G2CmM37nHx10NUFxuLmp96A4C2cUiJQQJ99AKACULyCpDyPWLAAAAAZCSQasT")
     endpoint = "https://neunet-communication-service.unitedstates.communication.azure.com/"
     email_client = EmailClient(endpoint, key)
@@ -88,7 +112,7 @@ def send_email(to_addresses, subject, body_plain, body_html):
         "content": {
             "subject": subject,
             "plainText": body_plain,
-            "html": body_html,
+            
         },
         "recipients": {
             "to": [{"address": address, "displayName": "Candidate"} for address in to_addresses]
@@ -144,20 +168,46 @@ fetcher_agent = autogen.AssistantAgent(
 
 # Email Service Agent
 email_agent_prompt = """
-You are an Email Service Agent responsible for sending emails on behalf of the group. 
-You will:
-1. Accept requests to send emails to candidates.
-2. Use the provided email addresses and message to send emails via the Azure Communication Service.
-3. Generate properly formatted email content with appropriate subject and body.
-4. The subject should be 3-4 words summarizing the email content.
-5. The body should be a well-structured message with a clear call to action. The tone should be professional and engaging. 
-6. Respond with success or failure status after sending the email.
+You are an Email Service Agent, responsible for managing and executing all email-related tasks with precision and efficiency.
 
-Instructions:
-- Ensure the email content is properly formatted.
-- If any required fields are missing, ask for clarification.
-- Its your responsibility to generate appropriate subject and body for the email.
-- The end salutation should be only "Best Regards"
+### Primary Responsibilities:
+1. Understand the task:
+   - If the request is to send an email, ensure all required parameters (`to_addresses`, `subject`, and `body_plain`) are validated.
+   - If any parameters are missing or unclear, ask for clarification or additional details from the requester.
+   - Ensure the email content is professional, well-structured, and adheres to the context provided.
+2. Handle multiple recipients:
+   - If `to_addresses` contains multiple email addresses, ensure that all recipients receive the email without duplication.
+   - Confirm that email addresses are formatted correctly and return an error message for invalid entries.
+3. Error handling:
+   - Handle exceptions during email sending (e.g., invalid addresses, missing parameters, or API failures).
+   - Return detailed error messages, including possible solutions, to help resolve issues.
+4. It is your responsibility to generate proper subject line and body for the email based on the context provided.
+
+### Formatting Guidelines for Emails:
+- **Subject:** Ensure the subject line is concise and relevant to the email's purpose.
+- **Body Content:** Use clear, professional language. Include a salutation, the main content, and a polite closing.
+- **Display Names:** If display names are available, include them in the email.
+
+### Behavior:
+- Confirm successful email dispatch by providing a status message.
+- Log and summarize actions taken for future traceability.
+- In case of failures, retry the operation up to 3 times before escalating the issue.
+
+### Style:
+- Maintain a formal tone unless instructed otherwise.
+- Ensure inclusivity in language, adhering to professional communication standards.
+- Provide feedback or suggestions to improve email clarity or tone when necessary.
+
+### Example Requests:
+- "Send an email to candidates with details about their application status."
+- "Draft an email to notify all selected candidates."
+- "Ensure no errors occur when sending bulk emails."
+
+You will use the `send_email` function through executor agent for execution. Validate all inputs and output the status of operations clearly.
+
+**Always confirm task completion or report issues explicitly.**
+
+
 """
 
 email_agent = autogen.AssistantAgent(
@@ -270,7 +320,7 @@ job_desc_creator_agent = autogen.AssistantAgent(
 
 # Define the Group Chat with the agents
 groupchat = autogen.GroupChat(
-    agents=[user_proxy, fetcher_agent, executor_agent, job_desc_creator_agent, email_agent],
+    agents=[user_proxy, fetcher_agent, job_desc_creator_agent, email_agent, executor_agent],
     messages=[],
     max_round=50,
 )
@@ -285,12 +335,16 @@ def initiate_chat():
                                         1. Candidate Fetching Agent: Responsible for retrieving the top candidates for a given job ID.
                                         2. Function Executor Agent: Executes all functions for the group.
                                         3. Job Description Generator Agent: Generates a comprehensive job description using the information provided.
-                                        4. Email Service Agent: Sends emails to candidates based on user requests.
+                                        4. Email Service Agent: Sends emails as per the group conversation.
                              
                                         When user requests a task, then only the appropriate agent will answer.
                                         - For example if user asks to fetch top candidates, then only Candidate Fetching Agent will answer.
                                         - If user asks to generate job description, then only Job Description Generator Agent will answer. 
-                                        - If user asks to send emails, only Email Service Agent will answer.                          
+                                        - If user asks to send emails, then only Email Service Agent will answer.   
+
+                                        General Instructions:
+                                        - there are going to be cases where the agents will ask for more information or clarification.
+                                        - there are going to be cases when the execution of one function or agent will depend on the output of another function or agent. Ensure that these also are handled properly.                       
                                         """)
 
 
