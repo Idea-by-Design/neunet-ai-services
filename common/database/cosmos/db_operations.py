@@ -1,6 +1,8 @@
 from azure.cosmos import CosmosClient, exceptions
 from common.utils.config_utils import load_config
 from datetime import datetime
+import ast
+
 
 # Load configuration
 config = load_config()
@@ -301,11 +303,14 @@ def save_ranking_data_to_cosmos_db(ranking_data, candidate_email, ranking, conve
 
 
 
-def fetch_top_k_candidates_by_percentage(job_id, percentage=10):
+
+import ast
+
+def fetch_top_k_candidates_by_count(job_id, top_k=10):
     try:
-        # Define the query to fetch only email and ranking from the candidates array
+        # Define the query to fetch job_title and the candidates (resume, email, ranking)
         query = """
-        SELECT candidate.email, candidate.ranking
+        SELECT c.job_title, candidate.resume, candidate.email, candidate.ranking
         FROM c
         JOIN candidate IN c.candidates
         WHERE c.job_id = @job_id
@@ -325,9 +330,83 @@ def fetch_top_k_candidates_by_percentage(job_id, percentage=10):
         if results:
             print(f"Application found for job ID: {job_id}")
 
-            # Prepare the formatted output with only email and ranking
-            candidate_list = [{"email": result["email"], "ranking": result["ranking"]}
-                              for result in results]
+            # Extract job_title from the first result (same for all candidates in the document)
+            job_title = results[0]["job_title"]
+
+            candidate_list = []
+            for result in results:
+                email = result["email"]
+                ranking = result["ranking"]
+
+                # Safely parse the resume to extract the name
+                resume = result.get("resume", "{}")
+                try:
+                    parsed_resume = ast.literal_eval(resume)
+                    name = parsed_resume.get('name', 'N/A')
+                except (ValueError, SyntaxError):
+                    name = "Invalid JSON"
+
+                candidate_list.append({"name": name, "email": email, "ranking": ranking})
+
+            # Sort candidates by ranking in descending order
+            sorted_candidates = sorted(candidate_list, key=lambda x: x['ranking'], reverse=True)
+
+            # Return the top k candidates
+            top_candidates = sorted_candidates[:top_k]
+            return {"job_title": job_title, "top_candidates": top_candidates}
+
+        else:
+            print(f"No application found for job ID: {job_id}")
+            return None
+
+    except Exception as e:
+        print(f"An error occurred while fetching application: {e}")
+        return None
+
+
+import ast
+
+def fetch_top_k_candidates_by_percentage(job_id, percentage=10):
+    try:
+        # Define the query to fetch job_title and the candidates (resume, email, ranking)
+        query = """
+        SELECT c.job_title, candidate.resume, candidate.email, candidate.ranking
+        FROM c
+        JOIN candidate IN c.candidates
+        WHERE c.job_id = @job_id
+        """
+        parameters = [
+            {"name": "@job_id", "value": job_id}
+        ]
+
+        # Query the applications container
+        results = list(applications_container.query_items(
+            query=query,
+            parameters=parameters,
+            enable_cross_partition_query=True
+        ))
+
+        # If results exist, format them into the required output
+        if results:
+            print(f"Application found for job ID: {job_id}")
+
+            # Extract job_title from the first result (same for all candidates in the document)
+            job_title = results[0]["job_title"]
+
+            candidate_list = []
+            for result in results:
+                email = result["email"]
+                ranking = result["ranking"]
+
+                # Safely parse the resume to extract the name
+                resume = result.get("resume", "{}")
+                try:
+                    parsed_resume = ast.literal_eval(resume)
+                    name = parsed_resume.get('name', 'N/A')
+                except (ValueError, SyntaxError):
+                    name = "Invalid JSON"
+
+                candidate_list.append({"name": name, "email": email, "ranking": ranking})
 
             # Sort candidates by ranking in descending order
             sorted_candidates = sorted(candidate_list, key=lambda x: x['ranking'], reverse=True)
@@ -335,9 +414,9 @@ def fetch_top_k_candidates_by_percentage(job_id, percentage=10):
             # Calculate the top percentage number of candidates to return
             top_count = max(1, int(len(sorted_candidates) * (percentage / 100)))
 
-            # Return the top percentage candidates
+            # Return the job title and top percentage candidates
             top_candidates = sorted_candidates[:top_count]
-            return {"top_candidates": top_candidates}
+            return {"job_title": job_title, "top_candidates": top_candidates}
 
         else:
             print(f"No application found for job ID: {job_id}")
@@ -346,47 +425,3 @@ def fetch_top_k_candidates_by_percentage(job_id, percentage=10):
     except Exception as e:
         print(f"An error occurred while fetching application: {e}")
         return None
-    
-def fetch_top_k_candidates_by_count(job_id, top_k=10):
-    try:
-        # Define the query to fetch only email and ranking from the candidates array
-        query = """
-        SELECT candidate.email, candidate.ranking
-        FROM c
-        JOIN candidate IN c.candidates
-        WHERE c.job_id = @job_id
-        """
-        parameters = [
-            {"name": "@job_id", "value": job_id}
-        ]
-
-        # Query the applications container
-        results = list(applications_container.query_items(
-            query=query,
-            parameters=parameters,
-            enable_cross_partition_query=True
-        ))
-
-        # If results exist, format them into the required output
-        if results:
-            print(f"Application found for job ID: {job_id}")
-
-            # Prepare the formatted output with only email and ranking
-            candidate_list = [{"email": result["email"], "ranking": result["ranking"]}
-                              for result in results]
-
-            # Sort candidates by ranking in descending order
-            sorted_candidates = sorted(candidate_list, key=lambda x: x['ranking'], reverse=True)
-
-            # Return the top k candidates
-            top_candidates = sorted_candidates[:top_k]
-            return {"top_candidates": top_candidates}
-
-        else:
-            print(f"No application found for job ID: {job_id}")
-            return None
-
-    except Exception as e:
-        print(f"An error occurred while fetching application: {e}")
-        return None
-
