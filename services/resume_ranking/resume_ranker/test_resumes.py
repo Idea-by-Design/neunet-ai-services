@@ -44,21 +44,22 @@ def main():
     # List of email IDs
     email_list = [
         # Good resumes:
-        "ganeshthanu17@gmail.com",
-        "khushilmodi17@gmail.com",
-        "suryasaith@gmail.com",
-        "saitulasi1729@gmail.com",
-        "abireads01@outlook.com",
-        "amit.bh@gatech.edu",
-        "pinki22shiv2016@gmail.com",
+         "vedikas3012@gmail.com"
+        # "ganeshthanu17@gmail.com",
+        # "khushilmodi17@gmail.com",
+        # "suryasaith@gmail.com",
+        # "saitulasi1729@gmail.com",
+        # "abireads01@outlook.com",
+        # "amit.bh@gatech.edu",
+        # "pinki22shiv2016@gmail.com",
 
-        # Bad resumes:
-        "Benjamin.Rohrs@gmail.com",
-        "minal.patilr30@gmail.com",
-        "srilalithamv18@gmail.com",
-        "rishikotadiya1711@gmail.com",
-        "guillem.cobos93@gmail.com",
-        "khan27@jhu.edu"
+        # # Bad resumes:
+        # "Benjamin.Rohrs@gmail.com",
+        # "minal.patilr30@gmail.com",
+        # "srilalithamv18@gmail.com",
+        # "rishikotadiya1711@gmail.com",
+        # "guillem.cobos93@gmail.com",
+        # "khan27@jhu.edu"
     ]
 
     # Job description ID (can be parameterized as needed)

@@ -23,7 +23,7 @@ user_proxy = autogen.UserProxyAgent(
 # Define the Executor Agent to run functions
 executor_agent_prompt = '''
 This agent executes all functions for the group. 
-It receives function requests from other agents and runs them with the provided arguments.
+It receives function requests from other agents and runs them with the provided arguments. MAKE SURE TO GENERATE CORRECT ARGUMENTS BEFORE RUNNING THE FUNCTION.
 '''
 executor_agent = autogen.AssistantAgent(
     name="function_executor_agent",
@@ -70,6 +70,27 @@ executor_agent = autogen.AssistantAgent(
             {
                 "name": "send_email",
                 "description": "Sends an email to a list of recipients.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "to_addresses": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "List of email addresses to send the email to."
+                        },
+                        "subject": {
+                            "type": "string",
+                            "description": "The subject of the email."
+                        },
+                        "body_plain": {
+                            "type": "string",
+                            "description": "The plain text content of the email."
+                        }
+                    },
+                    "required": ["to_addresses", "subject", "body_plain"]
+                }
                 
             }
 
@@ -79,7 +100,7 @@ executor_agent = autogen.AssistantAgent(
 
 
 # Integrate email sending function
-def send_email(to_addresses, subject, body_plain, body_html):
+def send_email(to_addresses, subject, body_plain):
     key = AzureKeyCredential("4GhT4z2rGEnNQuK8E1mPag9G2CmM37nHx10NUFxuLmp96A4C2cUiJQQJ99AKACULyCpDyPWLAAAAAZCSQasT")
     endpoint = "https://neunet-communication-service.unitedstates.communication.azure.com/"
     email_client = EmailClient(endpoint, key)
@@ -88,13 +109,14 @@ def send_email(to_addresses, subject, body_plain, body_html):
         "content": {
             "subject": subject,
             "plainText": body_plain,
-            "html": body_html,
+            
         },
         "recipients": {
             "to": [{"address": address, "displayName": "Candidate"} for address in to_addresses]
         },
         "senderAddress": "DoNotReply@ideaxdesign.com",
     }
+    print(f"Message: {message}")
     
     try:
         poller = email_client.begin_send(message)
@@ -147,7 +169,7 @@ email_agent_prompt = """
 You are an Email Service Agent responsible for sending emails on behalf of the group. 
 You will:
 1. Accept requests to send emails to candidates.
-2. Use the provided email addresses and message to send emails via the Azure Communication Service.
+2. Use the provided email addresses and message to send emails via executer agent. If you are not sure about the email addresses, ask for clarification.
 3. Generate properly formatted email content with appropriate subject and body.
 4. The subject should be 3-4 words summarizing the email content.
 5. The body should be a well-structured message with a clear call to action. The tone should be professional and engaging. 
@@ -158,6 +180,16 @@ Instructions:
 - If any required fields are missing, ask for clarification.
 - Its your responsibility to generate appropriate subject and body for the email.
 - The end salutation should be only "Best Regards"
+- Ensure all input arguments are properly formatted as per requirements.
+
+### Input Format:
+To ensure successful operation, the inputs to the `send_email` function must follow this format:
+- **to**: An array of email addresses to send the email to. Example: `["recipient1@example.com", "recipient2@example.com"]`
+- **subject**: A short, descriptive string summarizing the email. Example: `"Welcome to Our Service"`
+- **body_plain**: A plain-text version of the email content. Example: `"Hello,\n\nThank you for signing up for our service. We look forward to serving you.\n\nBest regards,\nThe Team"`
+
+
+
 """
 
 email_agent = autogen.AssistantAgent(
