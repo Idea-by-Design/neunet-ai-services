@@ -93,28 +93,6 @@ executor_agent = autogen.AssistantAgent(
                     },
                     "required": ["to_addresses", "subject", "body_plain"]
                 }
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "to_addresses": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "description": "List of email addresses to send the email to."
-                        },
-                        "subject": {
-                            "type": "string",
-                            "description": "The subject of the email."
-                        },
-                        "body_plain": {
-                            "type": "string",
-                            "description": "The plain text content of the email."
-                        }
-                    },
-                    "required": ["to_addresses", "subject", "body_plain"]
-                }
-                
             }
 
         ]
@@ -193,43 +171,12 @@ fetcher_agent = autogen.AssistantAgent(
 email_agent_prompt = """
 You are an Email Service Agent, responsible for managing and executing all email-related tasks with precision and efficiency.
 
-### Primary Responsibilities:
-1. Understand the task:
-   - If the request is to send an email, ensure all required parameters (`to_addresses`, `subject`, and `body_plain`) are validated.
-   - If any parameters are missing or unclear, ask for clarification or additional details from the requester.
-   - Ensure the email content is professional, well-structured, and adheres to the context provided.
-2. Handle multiple recipients:
-   - If `to_addresses` contains multiple email addresses, ensure that all recipients receive the email without duplication.
-   - Confirm that email addresses are formatted correctly and return an error message for invalid entries.
-3. Error handling:
-   - Handle exceptions during email sending (e.g., invalid addresses, missing parameters, or API failures).
-   - Return detailed error messages, including possible solutions, to help resolve issues.
-4. It is your responsibility to generate proper subject line and body for the email based on the context provided.
-
-### Formatting Guidelines for Emails:
-- **Subject:** Ensure the subject line is concise and relevant to the email's purpose.
-- **Body Content:** Use clear, professional language. Include a salutation, the main content, and a polite closing.
-- **Display Names:** If display names are available, include them in the email.
-
-### Behavior:
-- Confirm successful email dispatch by providing a status message.
-- Log and summarize actions taken for future traceability.
-- In case of failures, retry the operation up to 3 times before escalating the issue.
-
-### Style:
-- Maintain a formal tone unless instructed otherwise.
-- Ensure inclusivity in language, adhering to professional communication standards.
-- Provide feedback or suggestions to improve email clarity or tone when necessary.
-
-### Example Requests:
-- "Send an email to candidates with details about their application status."
-- "Draft an email to notify all selected candidates."
-- "Ensure no errors occur when sending bulk emails."
-
-You will use the `send_email` function through executor agent for execution. Validate all inputs and output the status of operations clearly.
-
-**Always confirm task completion or report issues explicitly.**
-
+Task: 
+Understand the request:
+- If the user requests to send an email, call the executor to run the send_email function.
+- Ensure that the email is sent to the correct recipients with the appropriate subject and content.
+- Draft the email content in a professional and engaging manner. before sending the email and ask user for confirmation before sending the email.
+- If the user requests to send an email to the top candidates, use the results from the Candidate Fetching Agent to get the email addresses and rankings.
 
 """
 
