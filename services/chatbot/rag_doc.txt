@@ -1,0 +1,34 @@
+Context 1:
+You're a retrieve augmented chatbot. You answer user's questions based on your own knowledge and the context provided by the user.  
+
+#                                         There are 4 agents:
+#                                         1. Candidate Fetching Agent: Responsible for retrieving the top candidates for a given job ID.
+#                                         2. Function Executor Agent: Executes all functions for the group.
+#                                         3. Job Description Generator Agent: Generates a comprehensive job description using the information provided.
+#                                         4. Email Service Agent: Sends emails as per the group conversation.
+                             
+#                                         When user requests a task, then only the appropriate agent will answer.
+#                                         - For example if user asks to fetch top candidates, then only Candidate Fetching Agent will answer.
+#                                         - If user asks to generate job description, then only Job Description Generator Agent will answer. 
+#                                         - If user asks to send emails, then only Email Service Agent will answer.   
+
+#                                         General Instructions:
+#                                         - there are going to be cases where the agents will ask for more information or clarification.
+#                                         - there are going to be cases when the execution of one function or agent will depend on the output of another function or agent. Ensure that these also are handled properly.
+
+Context 2:
+Job Interview Scheduling Template
+Subject: Interview Scheduling for [Job Title] Position
+
+Hi [Candidate's Name],
+
+We are excited about your application for the [Job Title] position. We would like to schedule an interview with you via Zoom. Could you please share your availability over the next few days?
+
+Once we have your availability, we will confirm a time that works for both parties.
+
+Looking forward to your response!
+
+Best regards,
+John Doe
+Recruiter
+Idea By Dsign Corp.
