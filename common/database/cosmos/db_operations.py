@@ -426,3 +426,44 @@ def fetch_top_k_candidates_by_percentage(job_id, percentage=10):
     except Exception as e:
         print(f"An error occurred while fetching application: {e}")
         return None
+
+
+def update_application_status(job_id, candidate_email, new_status):
+    valid_statuses = [
+        "Applied",
+        "Application Under Review",
+        "Interview Scheduled",
+        "Interview Feedback Under Review",
+        "Offer Extended",
+        "Rejected",
+        "Withdrawn"
+    ]
+
+    try:
+        # Fetch the job document from Cosmos DB using the job_id
+        job_document = applications_container.read_item(item=str(job_id), partition_key=str(job_id))
+        
+        # Check if "candidates" key exists
+        if "candidates" not in job_document:
+            return f"Error: No candidates found for job ID {job_id}."
+
+        # Search for the candidate by email
+        for candidate in job_document["candidates"]:
+            if candidate["email"].lower() == candidate_email.lower():  # Case-insensitive comparison
+                # Update the application status
+                if new_status in valid_statuses:
+                    candidate["application_status"] = new_status
+                    # Update the document in Cosmos DB
+                    applications_container.replace_item(item=job_document["id"], body=job_document)
+                    return f"Success: Application status for {candidate_email} updated to '{new_status}'."
+                else:
+                    candidate["application_status"] = "Unknown"
+                    # Update the document in Cosmos DB
+                    applications_container.replace_item(item=job_document["id"], body=job_document)
+                    return f"Error: Invalid status '{new_status}' provided. Status set to 'Unknown'."
+
+        return f"Error: Candidate with email {candidate_email} not found for job ID {job_id}."
+    
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return f"An error occurred: {e}"

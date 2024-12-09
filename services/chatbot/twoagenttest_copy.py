@@ -1,6 +1,6 @@
 import autogen
 import os
-from common.database.cosmos.db_operations import fetch_top_k_candidates_by_count, fetch_top_k_candidates_by_percentage
+from common.database.cosmos.db_operations import fetch_top_k_candidates_by_count, fetch_top_k_candidates_by_percentage, update_application_status
 from azure.communication.email import EmailClient
 from azure.core.credentials import AzureKeyCredential
 
@@ -9,7 +9,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 
 
 # Configuration for AI models
-config_list = [{"model": "gpt-4o-mini", "api_key": api_key}]
+config_list = [{"model": "gpt-4o", "api_key": api_key}]
 
 # Define the User Proxy Agent
 user_proxy = autogen.UserProxyAgent(
@@ -35,7 +35,7 @@ executor_agent = autogen.AssistantAgent(
         "functions": [
             {
                 "name": "fetch_top_k_candidates_by_percentage",
-                "description": "Fetches the top percentage of candidates (email and ranking only) for a given job ID.",
+                "description": "Fetches the top percentage of candidates (email and ranking only) for a given job ID. ",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -93,6 +93,28 @@ executor_agent = autogen.AssistantAgent(
                     },
                     "required": ["to_addresses", "subject", "body_plain"]
                 }
+            },
+            {
+                "name": "update_application_status",
+                "description": "Updates the status of application for given job application and candidate email id.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "job_id": {
+                            "type": "number",
+                            "description": "The job ID for which to update the application status."
+                        },
+                        "candidate_email": {
+                            "type": "string",
+                            "description": "The email of the candidate whose status is to be updated."
+                        },
+                        "new_status": {
+                            "type": "string",
+                            "description": "The new status to be set for the candidate."
+                        }
+                    },
+                    "required": ["job_id", "candidate_email", "new_status"]
+                }
             }
 
         ]
@@ -136,7 +158,8 @@ executor_agent.register_function(
     function_map={
         "fetch_top_k_candidates_by_percentage": fetch_top_k_candidates_by_percentage,
         "fetch_top_k_candidates_by_count": fetch_top_k_candidates_by_count,
-        "send_email": send_email, 
+        "send_email": send_email,
+        "update_application_status": update_application_status
     }
 )
 
@@ -171,12 +194,15 @@ fetcher_agent = autogen.AssistantAgent(
 email_agent_prompt = """
 You are an Email Service Agent, responsible for managing and executing all email-related tasks with precision and efficiency.
 
-Task: 
+Task: User will ask you to send an email to the top candidates or to specific email address(es) to confirm the availability for an interview.
 Understand the request:
 - If the user requests to send an email, call the executor to run the send_email function.
 - Ensure that the email is sent to the correct recipients with the appropriate subject and content.
 - Draft the email content in a professional and engaging manner. before sending the email and ask user for confirmation before sending the email.
 - If the user requests to send an email to the top candidates, use the results from the Candidate Fetching Agent to get the email addresses and rankings.
+
+Once confirmed and email is sent for availibility for interview, you should automatically update the application status for the candidates who received the email with status "application_status":"Interview Scheduled".
+To update status ask the executor agent to run the update_application_status function and provide it with job_id, candidate_email and new_status as arguments.
 
 """
 
