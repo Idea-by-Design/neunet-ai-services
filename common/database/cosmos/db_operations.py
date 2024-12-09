@@ -286,7 +286,8 @@ def save_ranking_data_to_cosmos_db(ranking_data, candidate_email, ranking, conve
             "email": candidate_email,
             "ranking": ranking,
             "conversation": conversation,
-            "resume": resume
+            "resume": resume,
+            "application_status": "Applied"
         }
         ranking_data["candidates"].append(new_candidate)
 
