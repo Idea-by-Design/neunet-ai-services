@@ -432,6 +432,7 @@ def update_application_status(job_id, candidate_email, new_status):
     valid_statuses = [
         "Applied",
         "Application Under Review",
+        "Interview Invite Sent",
         "Interview Scheduled",
         "Interview Feedback Under Review",
         "Offer Extended",
