@@ -3,13 +3,32 @@ import os
 import uuid
 import json
 from common.database.cosmos.db_operations import fetch_application_by_job_id,  fetch_application_by_job_id, create_application_for_job_id, save_ranking_data_to_cosmos_db
+from dotenv import load_dotenv
 
+# Load environment variables from .env file in the project directory
+load_dotenv(dotenv_path=".env")
+
+
+# # Fetch the API key from environment variables
+# api_key = os.getenv("OPENAI_API_KEY")
+
+
+# # Configuration for AI models
+# config_list = [{"model": "gpt-4o", "api_key": api_key}]
+
+
+# Configuration for Azure OpenAI models
+config_list = [{"model": os.getenv("deployment_name"),  
+                            "api_key": os.getenv("AZURE_OPENAI_API_KEY"),
+                            "base_url": os.getenv("AZURE_OPENAI_ENDPOINT"),
+                            "api_type": os.getenv("api_type"),  
+                            "api_version": os.getenv("api_version")}]
 
 def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candidate_email, job_questionnaire):
 
 
     # Fetching the API key from the environment variable
-    api_key='sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA'
+    # api_key=os.getenv("AZURE_OPENAI_API_KEY")
 
     # Use the job_questionnaire that is passed as an argument
     questionnaire = job_questionnaire
@@ -19,7 +38,7 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
         has_content = "content" in message and message["content"] is not None
         return has_content and "TERMINATE" in message["content"]
 
-    import json
+
 
     def create_json_safe_payload(data):
         try:
@@ -89,7 +108,7 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
                                                     Show the questionnaire to resume analyst with questions, weights.
                                                     Ask the resume analyst to use its scoring mechanism and score the resume based on the questionnaire in one go.
                                                     """,
-                                                    llm_config={"config_list": [{"model":"gpt-4o", "api_key":api_key}], 
+                                                    llm_config={"config_list": config_list, 
                                                                 "max_tokens": 2000})
     
     
@@ -146,7 +165,7 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
                                                                                  
                                                                     Once you complete your task, give the questionnaire output to score_calculator_analyst agent and it to calculate the final score.
                                                                     """,
-                                            llm_config={"config_list": [{"model":"gpt-4o", "api_key":api_key}], 
+                                            llm_config={"config_list": config_list, 
                                                         "max_tokens": 4096})
 
     
@@ -181,7 +200,7 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
 
                                                                 Make sure every calculation and validation is done carefully to avoid any incorrect results.
                                                                 """,
-                                                    llm_config={"config_list": [{"model":"gpt-4o", "api_key":api_key}], 
+                                                    llm_config={"config_list": config_list, 
                                                                 "max_tokens": 2000})
     
     # Ranking tool declaration
@@ -203,7 +222,7 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
     # Ranking agent to provide a ranking based on the conversation
     ranking_agent = autogen.AssistantAgent(name="ranking_agent", system_message="""As the ranking agent, you provide a ranking
                                         based on the scoring provided by score_calculator_analyst.""",
-                                        llm_config={"config_list": [{"model":"gpt-4o", "api_key":api_key}],  
+                                        llm_config={"config_list": config_list,  
                                                     "max_tokens": 4096,
                                                     "functions": [ranking_tool_declaration]})
 
@@ -211,7 +230,7 @@ def initiate_chat(job_id, job_questionnaire_id, resume, job_description, candida
     group_chat = autogen.GroupChat(agents=[user_proxy, job_description_analyst, resume_analyst, score_calculator_analyst, ranking_agent], messages=[])
 
     # Manager to manage the group chat
-    group_chat_manager = autogen.GroupChatManager(groupchat=group_chat, llm_config={"config_list": [{"model":"gpt-4o", "api_key":api_key}]})
+    group_chat_manager = autogen.GroupChatManager(groupchat=group_chat, llm_config={"config_list": config_list})
 
     # Initiate the group chat and feed in the questionnaire for job_description_analyst to ask
     user_proxy.initiate_chat(group_chat_manager,

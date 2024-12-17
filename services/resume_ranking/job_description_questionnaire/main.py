@@ -20,8 +20,6 @@ def read_file_to_string(file_path):
     
     
 def main():
-    # Mock API Key (Replace this with a real API key or retrieve it from environment variables)
-    api_key = os.getenv("OPENAI_API_KEY")
     
     # jd = fetch_job_description("123456")
     # print(jd)

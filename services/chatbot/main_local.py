@@ -5,7 +5,6 @@ def main():
     """
     Entry point for the script.
     """
-    
     initiate_chat()
 
 if __name__ == "__main__":

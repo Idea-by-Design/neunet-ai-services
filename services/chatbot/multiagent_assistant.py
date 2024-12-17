@@ -2,15 +2,26 @@ import autogen
 import os
 from common.database.cosmos.db_operations import fetch_top_k_candidates_by_count, fetch_top_k_candidates_by_percentage, update_application_status
 from services.chatbot.functions import send_email
+from dotenv import load_dotenv
+
+# Load environment variables from .env file in the project directory
+load_dotenv(dotenv_path=".env")
 
 
+# # Fetch the API key from environment variables
+# api_key = os.getenv("OPENAI_API_KEY")
 
-# Fetch the API key from environment variables
-api_key = os.getenv("OPENAI_API_KEY")
+
+# # Configuration for AI models
+# config_list = [{"model": "gpt-4o", "api_key": api_key}]
 
 
-# Configuration for AI models
-config_list = [{"model": "gpt-4o", "api_key": api_key}]
+# Configuration for Azure OpenAI models
+config_list = [{"model": os.getenv("deployment_name"),  
+                            "api_key": os.getenv("AZURE_OPENAI_API_KEY"),
+                            "base_url": os.getenv("AZURE_OPENAI_ENDPOINT"),
+                            "api_type": os.getenv("api_type"),  
+                            "api_version": os.getenv("api_version")}]
 
 # Define the User Proxy Agent
 user_proxy = autogen.UserProxyAgent(
@@ -167,16 +178,38 @@ fetcher_agent = autogen.AssistantAgent(
 email_agent_prompt = """
 You are an Email Service Agent, responsible for managing and executing all email-related tasks with precision and efficiency.
 
-Task: User will ask you to send an email to the top candidates or to specific email address(es) to confirm the availability for an interview.
-Understand the request:
-- If the user requests to send an email, call the executor to run the send_email function.
-- Ensure that the email is sent to the correct recipients with the appropriate subject and content and this calenderly link "https://calendly.com/hemant-singh-ideaxdesign/30min?email={candidate_email}&job_id={job_id}".
-- Draft the email content in a professional and engaging manner. 
-- Before sending the email and ask user for confirmation before sending the email.
-- If the user requests to send an email to the top candidates, use the results from the Candidate Fetching Agent to get the email addresses and rankings.
+[Task]: You will handle user requests for the following service:
 
-Once confirmed and email is sent for availibility for interview, you should automatically update the application status for the candidates who received the email with status "application_status":"Interview Invite Sent".
-To update status ask the executor agent to run the update_application_status function and provide it with job_id, candidate_email and new_status as arguments.
+[Service 1]: Sending interview invitation emails to top candidates or specific email addresses.
+
+This service requires two function calls:
+1. send_email
+2. update_application_status
+
+Process:
+1. Understand the request:
+   - Use the results from the Candidate Fetching Agent to obtain email addresses and rankings.
+
+2. Draft the email:
+   - Compose a professional and engaging email content.
+   - Include essential information: appropriate subject; content with candidate name, job title.
+   - Incorporate the Calendly link: "https://calendly.com/hemant-singh-ideaxdesign/30min?email={candidate_email}&job_id={job_id}"
+
+
+3. Prepare for sending:
+   - Compile the email arguments (recipients, subject, content).
+   - Display the draft email (subject and content) to the user for final confirmation.
+   - If the user requests changes, make necessary adjustments and seek confirmation again.
+
+4. Send the email: 
+   - Once confirmed, ask the executor to run the send_email function with the prepared arguments.
+
+5. Update application status:
+   - After successful email sending, automatically update the application status for each recipient.
+   - Use the update_application_status function with arguments: job_id, candidate_email, and new_status ("Interview Invite Sent").
+
+6. Confirmation and reporting:
+   - Provide a summary to the user, including the number of emails sent and status updates made.
 
 """
 
