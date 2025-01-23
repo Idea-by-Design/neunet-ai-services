@@ -1,10 +1,16 @@
 import openai
-from openai import OpenAI
+from openai import AzureOpenAI
 import os
 import requests
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI()
+from dotenv import load_dotenv
+
+# Load environment variables from .env file in the project directory
+load_dotenv(dotenv_path=".env")
+
+client = AzureOpenAI(api_key=os.getenv("AZURE_OPENAI_API_KEY"), azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"), api_version=os.getenv("api_version"))
+
+model= os.getenv("deployment_name")
 
 def generate_description(data):
     # Load the initial prompt template
@@ -89,7 +95,7 @@ def fill_missing_fields_with_defaults(data):
 
 def call_openai_api(prompt):
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=model,
         messages=[{"role": "system", "content": "You are an AI assistant that helps generate comprehensive and compelling job descriptions based on the provided data.",
                     "role": "user", "content": prompt}]
     )

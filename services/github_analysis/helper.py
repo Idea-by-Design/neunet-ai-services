@@ -1,13 +1,17 @@
 import openai
-from openai import OpenAI
+from openai import AzureOpenAI
 import json
 
 import os
 
+from dotenv import load_dotenv
 
-openai.api_key = 'sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA'
-client = OpenAI(api_key='sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA')
+# Load environment variables from .env file in the project directory
+load_dotenv(dotenv_path=".env")
 
+client = AzureOpenAI(api_key=os.getenv("AZURE_OPENAI_API_KEY"), azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"), api_version=os.getenv("api_version"))
+
+model= os.getenv("deployment_name")
 
 def extract_github_username(github_identifier):
     """ Extracts the GitHub username from a URL or returns the identifier if it's already a username. """
@@ -34,7 +38,7 @@ def analyze_contributions_with_llm(repo, candidate_email, candidate_commits):
 
     
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=model,
         messages=[{"role": "system", "content": "You are a github repository analyzer. You have been provided with the data in the repository and the candidate's commit messages. Your job is to understand the data and provide insights on the candidate's role, responsibilities, and impact based on their commits."},
                 {"role": "system", "content": "The anakysis should be of short to medium length and should cover the key aspects of the candidate's contributions. Please provide the insights in a clear and concise manner. Do not "},
                 {"role": "user", "content": context}

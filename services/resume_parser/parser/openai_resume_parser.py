@@ -1,13 +1,17 @@
 import openai
-from openai import OpenAI
+from openai import AzureOpenAI
 import json
 
 import os
 
+from dotenv import load_dotenv
 
-openai.api_key = 'sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA'
-client = OpenAI(api_key='sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA')
+# Load environment variables from .env file in the project directory
+load_dotenv(dotenv_path=".env")
 
+client = AzureOpenAI(api_key=os.getenv("AZURE_OPENAI_API_KEY"), azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"), api_version=os.getenv("api_version"))
+
+model= os.getenv("deployment_name")
 
 def parse_resume_json(resume_text, links=None):
     
@@ -77,7 +81,7 @@ def parse_resume_json(resume_text, links=None):
     """
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=model,
         messages=[
             {"role": "system", "content": "You are a resume information extractor. You have been provided with the data in the resume and your job is to understand the data and extract the required information."},
             {"role": "system", "content": "When given the resume text, process and understand the data throughly and then proceed to present the extracted information in JSON format."},
