@@ -16,8 +16,6 @@ def read_file_to_string(file_path):
     
     
 def main():
-    # Mock API Key (Replace this with a real API key or retrieve it from environment variables)
-    api_key = os.getenv("OPENAI_API_KEY")
 
     # Sample Job Description
     job_description_path = r"services\resume_ranking\test_data\sample_files\sample_job_description.txt"

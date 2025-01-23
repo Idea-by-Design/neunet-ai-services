@@ -2,15 +2,26 @@ import autogen
 import os
 from common.database.cosmos.db_operations import fetch_top_k_candidates_by_count, fetch_top_k_candidates_by_percentage, update_application_status
 from services.chatbot.functions import send_email
+from dotenv import load_dotenv
+
+# Load environment variables from .env file in the project directory
+load_dotenv(dotenv_path=".env")
 
 
+# # Fetch the API key from environment variables
+# api_key = os.getenv("OPENAI_API_KEY")
 
-# Fetch the API key from environment variables
-api_key = os.getenv("OPENAI_API_KEY")
+
+# # Configuration for AI models
+# config_list = [{"model": "gpt-4o", "api_key": api_key}]
 
 
-# Configuration for AI models
-config_list = [{"model": "gpt-4o", "api_key": api_key}]
+# Configuration for Azure OpenAI models
+config_list = [{"model": os.getenv("deployment_name"),  
+                            "api_key": os.getenv("AZURE_OPENAI_API_KEY"),
+                            "base_url": os.getenv("AZURE_OPENAI_ENDPOINT"),
+                            "api_type": os.getenv("api_type"),  
+                            "api_version": os.getenv("api_version")}]
 
 # Define the User Proxy Agent
 user_proxy = autogen.UserProxyAgent(

@@ -3,9 +3,12 @@ import openai
 from openai import OpenAI
 import json
 
+client = OpenAI(api_key=os.getenv("AZURE_OPENAI_API_KEY"), 
+                api_base=os.getenv("AZURE_OPENAI_ENDPOINT"), 
+                api_version=os.getenv("api_version"),
+                api_type=os.getenv("api_type"))
 
-openai.api_key = 'sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA'
-client = OpenAI(api_key='sk-WVMOT-ux9F3MYCBpJdCTqCwjPfyCQa-iGBwD7yJtkST3BlbkFJyDQSA4BntLqFwINg-xRxS3DAsAbTbvlH5Cs2iUr2EA')
+model= os.getenv("deployment_name")
 
 # Function to generate a questionnaire using GPT-4o-mini
 def generate_questionnaire(job_description):
@@ -75,7 +78,7 @@ Here is the job description:
 
 
     completion = client.chat.completions.create(
-        model="gpt-4o",
+        model=model,
         messages=[
             {"role": "system", "content": "You are an expert recruitment consultant."},
             {"role": "user", "content": prompt}
