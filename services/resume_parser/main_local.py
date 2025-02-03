@@ -43,5 +43,5 @@ def main(file_path):
         print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
-    file_path = 'F:\\Job-Search\\VedikaSrivastava_Resume_Jul2024.pdf'
+    file_path = 'D:\Hemant_Singh_Resume.pdf'
     main(file_path)

@@ -1,12 +1,13 @@
 import os
 import openai
-from openai import OpenAI
+from openai import AzureOpenAI
 import json
+from dotenv import load_dotenv
 
-client = OpenAI(api_key=os.getenv("AZURE_OPENAI_API_KEY"), 
-                api_base=os.getenv("AZURE_OPENAI_ENDPOINT"), 
-                api_version=os.getenv("api_version"),
-                api_type=os.getenv("api_type"))
+# Load environment variables from .env file in the project directory
+load_dotenv(dotenv_path=".env")
+
+client = AzureOpenAI(api_key=os.getenv("AZURE_OPENAI_API_KEY"), azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"), api_version=os.getenv("api_version"))
 
 model= os.getenv("deployment_name")
 

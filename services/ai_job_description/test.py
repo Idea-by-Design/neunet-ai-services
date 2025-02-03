@@ -1,4 +1,4 @@
-from generate_description import generate_description
+from services.ai_job_description.generate_description import generate_description
 
 # Sample input data for testing
 test_data = {
@@ -10,7 +10,8 @@ test_data = {
     'time_commitment': '',
     'description': '',
     'requirements': '',
-    'benefits': 'Health insurance, 401(k)'
+    'benefits': 'Health insurance, 401(k)',
+    'job_title': 'Software Engineer',
 }
 
 generated_description = generate_description(test_data)
