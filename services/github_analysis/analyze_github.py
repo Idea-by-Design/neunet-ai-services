@@ -3,6 +3,10 @@ from github import Github
 import os
 from common.utils.config_utils import load_config
 from services.github_analysis.helper import extract_github_username, fetch_candidate_commits, analyze_contributions_with_llm
+from dotenv import load_dotenv
+
+# Load environment variables from .env file in the project directory
+load_dotenv(dotenv_path=".env")
 
 # Load configuration
 config = load_config()
