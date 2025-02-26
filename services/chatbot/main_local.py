@@ -1,4 +1,4 @@
-from services.chatbot.multiagent_assistant_copy import initiate_chat
+from services.chatbot.multiagent_assistant import initiate_chat
 
 
 def main():

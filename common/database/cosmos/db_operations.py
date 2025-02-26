@@ -468,3 +468,62 @@ def update_application_status(job_id, candidate_email, new_status):
     except Exception as e:
         print(f"An error occurred: {e}")
         return f"An error occurred: {e}"
+
+
+
+import re
+from azure.cosmos import exceptions
+
+def is_safe_query(query: str) -> bool:
+    """
+    Checks if the provided query is safe by verifying that it is a SELECT-only statement.
+    Returns True if safe, False otherwise.
+    """
+    # Normalize query by stripping whitespace and converting to lowercase.
+    normalized_query = query.strip().lower()
+    
+    # Ensure the query starts with 'select'
+    if not normalized_query.startswith("select"):
+        return False
+
+    # List of disallowed SQL commands (basic safeguard)
+    disallowed_keywords = ["create", "delete", "insert", "update", "drop", "alter", "truncate", "exec"]
+
+    # Check for any disallowed keyword in the query.
+    # Note: This simple check may produce false positives if the keyword appears in a string literal.
+    for keyword in disallowed_keywords:
+        if re.search(r'\b' + keyword + r'\b', normalized_query):
+            return False
+
+    return True
+
+
+
+# Below query is specific to applications container ONLY
+def execute_sql_query(query: str):
+    """
+    Executes the provided Cosmos DB SQL query on the 'applications' container.
+
+    Uses the connection and container variables already loaded from the configuration.
+
+    Parameters:
+        query (str): A valid Cosmos DB SQL query to be executed.
+
+    Returns:
+        list: A list of items retrieved by the query, or None if an error occurs or the query is unsafe.
+    """
+    # Check query safety before executing
+    if not is_safe_query(query):
+        print("Unsafe query detected. Aborting execution.")
+        return None
+
+    try:
+        # 'applications_container' is assumed to be initialized from your configuration.
+        results = list(applications_container.query_items(
+            query=query,
+            enable_cross_partition_query=True
+        ))
+        return results
+    except exceptions.CosmosHttpResponseError as e:
+        print(f"Error executing SQL query: {e}")
+        return None
