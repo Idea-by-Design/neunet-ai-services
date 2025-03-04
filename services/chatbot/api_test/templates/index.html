@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Multiagent Chatbot</title>
+  <style>
+/* Global box-sizing to include padding/border in element dimensions */
+    * {
+      box-sizing: border-box;
+    }
+
+    /* Body styling: dark background (ChatGPT-like) */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #343541; /* Dark outside background */
+      color: #ececec;            /* Light text */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Chat container: also dark, so the whole page is consistent */
+    #chat-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      width: 100%;
+      max-width: 800px;
+      background-color: #444654; /* Slightly different dark tone */
+      color: #ececec;            /* White-ish text on dark */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    #chat {
+      flex-grow: 1;
+      overflow-y: auto;
+      margin-bottom: 1em;
+    }
+
+    .message {
+      margin: 0.5em 0;
+      padding: 0.8em;
+      border-radius: 8px;
+      max-width: 75%;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    /* User messages: keep them in a distinct bubble */
+    .user-message {
+      background-color: #0b3d91; /* You can pick a different accent color */
+      align-self: flex-end;
+      color: #fff;
+    }
+
+    /* Bot messages: transparent or very subtle background, so partial lines look continuous */
+    .bot-message {
+      background-color: transparent; /* No box color => continuous dark background */
+      color: #ececec;
+      margin: 0;        /* Minimal spacing so partial lines flow naturally */
+      padding: 0.2em 0; /* Light spacing */
+      border-radius: 0; /* No bubble look */
+    }
+
+    #inputArea {
+      display: flex;
+      border-top: 1px solid #575b65;
+      padding-top: 10px;
+      align-items: center;
+    }
+
+    /* Dark input box with light text */
+    #inputBox {
+      flex-grow: 1;
+      background-color: #40414f;
+      border: 1px solid #575b65;
+      color: #ececec;
+      border-radius: 5px;
+      padding: 0.5em;
+      font-size: 1em;
+    }
+
+    /* Send button with green accent */
+    #sendBtn {
+      background-color: #10a37f;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 0.5em 1em;
+      cursor: pointer;
+      font-size: 1em;
+      margin-left: 1em;
+    }
+    #sendBtn:hover {
+      background-color: #0e8c6d;
+    }
+    #sendBtn:active {
+      background-color: #0b6a52;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <!-- Chat messages container -->
+    <div id="chat"></div>
+
+    <!-- Input area -->
+    <div id="inputArea">
+      <input id="inputBox" type="text" placeholder="Type your message here..." />
+      <button id="sendBtn" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Generate a unique session id (for demonstration).
+    const sessionId = Date.now().toString();
+    // Adjust if your FastAPI runs on a different host/port.
+    const wsUrl = `ws://127.0.0.1:5000/ws/${sessionId}`;
+    const websocket = new WebSocket(wsUrl);
+
+    websocket.onopen = function(event) {
+      console.log("[WebSocket] Connected with session:", sessionId);
+      addMessage("Connected with session: " + sessionId, "bot");
+    };
+
+    websocket.onmessage = function(event) {
+      console.log("[WebSocket] Received:", event.data);
+      addMessage(event.data, "bot");
+    };
+
+    websocket.onerror = function(event) {
+      console.error("[WebSocket] Error:", event);
+      addMessage("WebSocket Error: " + JSON.stringify(event), "bot");
+    };
+
+    websocket.onclose = function(event) {
+      console.log("[WebSocket] Closed:", event);
+      addMessage("WebSocket connection closed.", "bot");
+    };
+
+    function addMessage(text, sender) {
+      const chat = document.getElementById("chat");
+      const msgDiv = document.createElement("div");
+      msgDiv.classList.add("message");
+      msgDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
+      msgDiv.textContent = text;
+      chat.appendChild(msgDiv);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function sendMessage() {
+      const inputBox = document.getElementById("inputBox");
+      const message = inputBox.value.trim();
+      if (message !== "") {
+        // Display user message in the chat UI.
+        addMessage(message, "user");
+        // Send the message via WebSocket to the server.
+        websocket.send(message);
+        // Clear input
+        inputBox.value = "";
+      }
+    }
+  </script>
+</body>
+</html>
