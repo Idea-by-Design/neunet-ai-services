@@ -14,10 +14,10 @@ from common.database.cosmos import db_operations
 
 app = FastAPI(title="Neunet Recruitment API")
 
-# Enable CORS
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],  # Frontend URL
+    allow_origins=["http://localhost:5173", "https://www.neunet.io", "https://neunet.io"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
