@@ -1,51 +1,111 @@
-# neunet-ai-services
+# Neunet AI Services
 
+A powerful backend service that handles job postings, candidate applications, and AI-powered candidate matching for the Neunet platform.
 
-This repository contains multiple AI services. Each service is modular and organized in a separate directory under the `services/` directory.
+## Tech Stack
 
-## Setup
+### Backend Framework
+- FastAPI (v0.104.1) - Modern, fast web framework for building APIs with Python
+- Uvicorn (v0.24.0) - Lightning-fast ASGI server implementation
 
-1. **Install dependencies**:
+### Database
+- Azure Cosmos DB (v4.5.1) - Globally distributed, multi-model database service
+- Multiple containers for different data types:
+  - Job descriptions
+  - Applications
+  - Resumes
+  - GitHub analysis
+  - Rankings
+  - Questionnaires
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+### Authentication & Security
+- Python-Jose (v3.3.0) - JavaScript Object Signing and Encryption implementation
+- Passlib (v1.7.4) - Password hashing library
+- BCrypt (v4.0.1) - Password hashing
 
-2. **Configure settings**:
-   - Edit the `config/config.yaml` file with your database and Azure settings.
+### Data Validation
+- Pydantic (v2.4.2) - Data validation using Python type annotations
 
-3. **Install the ODBC Driver for SQL Server:**
-    - You need the Microsoft ODBC Driver for SQL Server installed on your machine. You can download it from Microsoft's official website.
+## Project Structure
 
+```
+neunet-ai-services/
+├── common/
+│   ├── database/
+│   │   └── cosmos/         # Cosmos DB operations
+│   └── utils/             # Utility functions
+├── config/
+│   └── config.yaml        # Configuration settings
+├── services/
+│   └── api/
+│       └── main.py        # FastAPI application
+├── scripts/
+│   └── run_api.sh        # Server startup script
+├── requirements.txt      # Python dependencies
+└── README.md
+```
 
-## Repository Structure
+## Features
 
-- `common/` - Contains shared modules and utilities.
-- `services/` - Contains directories for individual services.
-  - `resume_parser/` - Resume parsing service.
-- `scripts/` - Deployment and local run scripts.
-- `docs/` - Documentation for each service.
+1. Job Management
+   - Create and manage job postings
+   - Store job descriptions and requirements
+   - Handle job questionnaires
 
+2. Application Processing
+   - Process candidate applications
+   - Store resumes and cover letters
+   - Track application status
 
-## Database
+3. Candidate Analysis
+   - GitHub profile analysis
+   - Resume parsing
+   - Candidate ranking
 
-resumes
-github
-ranking
-jobs
-recruitment_process
+## API Endpoints
 
-I believe these five containers should be sufficient for most recruitment system needs. Here's why:
+### Jobs
+- `POST /jobs/` - Create a new job posting
+- `GET /jobs/{job_id}` - Get job details
+- `GET /jobs/` - List all jobs
 
-The "resumes" container covers candidate information and parsed resume data.
-The "github" container handles GitHub analysis for candidates.
-The "ranking" container manages candidate rankings for specific jobs.
-The "jobs" container stores all job posting information.
-The "recruitment_process" container tracks the status and stages of recruitment for each candidate-job pair.
+### Applications
+- `POST /jobs/{job_id}/apply` - Submit job application
+- `GET /jobs/{job_id}/applications` - Get job applications
+- `GET /debug/candidates/{job_id}` - Get candidates for a job
 
-These containers cover the main entities and processes in a typical recruitment system. However, there are a couple of considerations:
+## Setup and Installation
 
-Interviews: The interview scheduling and feedback could be incorporated into the "recruitment_process" container. Each stage in the recruitment process could include interview details if applicable.
-User/Recruiter Information: If you need to store information about recruiters or system users, you might consider adding this to the "recruitment_process" container (by including a recruiter_id field) or creating a separate "users" container if you need more detailed user management.
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Configure Azure Cosmos DB settings in `config/config.yaml`
+4. Run the server:
+   ```bash
+   ./scripts/run_api.sh
+   ```
 
-schema suggested is in updated_schema.json
+## Configuration
+
+The application uses a YAML configuration file (`config/config.yaml`) for:
+- Database connection settings
+- Container names
+- API configurations
+
+## Development
+
+1. Start the development server:
+   ```bash
+   cd services/api
+   uvicorn main:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+2. The API will be available at `http://localhost:8000`
+
+## Security
+
+- Implements secure password hashing with BCrypt
+- Uses JWT for authentication
+- Supports CORS for frontend integration
