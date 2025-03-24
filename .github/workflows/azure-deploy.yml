@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - feature/multi-container-db
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
   build-and-deploy:
