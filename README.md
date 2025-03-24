@@ -74,6 +74,10 @@ neunet-ai-services/
 - `GET /jobs/{job_id}/applications` - Get job applications
 - `GET /debug/candidates/{job_id}` - Get candidates for a job
 
+## Deployment
+
+The API is deployed to Azure App Service and can be accessed at https://neunet-api.azurewebsites.net.
+
 ## Setup and Installation
 
 1. Clone the repository
