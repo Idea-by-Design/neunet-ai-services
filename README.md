@@ -78,6 +78,10 @@ neunet-ai-services/
 
 The API is deployed to Azure App Service and can be accessed at https://neunet-api.azurewebsites.net.
 
+## Deployment Status
+
+Deployed to Azure App Service at: https://neunet-api.azurewebsites.net
+
 ## Setup and Installation
 
 1. Clone the repository
