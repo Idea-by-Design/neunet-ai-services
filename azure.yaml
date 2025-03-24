@@ -1,0 +1,10 @@
+name: neunet-api
+runtime: python:3.9
+startup: ./startup.sh
+env:
+  - name: COSMOS_URI
+    value: https://neunet-cosmos-db.documents.azure.com:443/
+  - name: COSMOS_KEY
+    value: hOlaV01rPLnOxzZf8LEbDUrs8osGbeG0R8xe3iuypkUHY5QIGsHq30eJtrrzNHmLTAM4p1nndfk8ACDbVoB1WQ==
+  - name: DATABASE_NAME
+    value: CandidateInfoDB
