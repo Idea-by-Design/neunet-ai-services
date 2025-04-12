@@ -17,7 +17,7 @@ app = FastAPI(title="Neunet Recruitment API")
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins since we're in development
+    allow_origins=["https://neunet.io", "https://www.neunet.io", "http://localhost:5173", "http://localhost:3000"],  # Production and development origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
