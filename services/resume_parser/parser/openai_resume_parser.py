@@ -66,10 +66,13 @@ def parse_resume_json(resume_text, links=None):
     - languages
     - hobbies
     - keywords (comma-separated list; analyse the resume text to detect technical and non-technical skills of the candidate and  tools, technologies, etc. the candidate appears to be proficient in; list should be exhaustive)
-
+    - summary (Additionally generate a summary of the resume in 5-6 lines to give an overview of the candidate's strenghts and experince. a brief summary of the resume, including key skills and experiences) 
     Resume Text:
     {resume_text}
     {links}
+
+    
+
 
 
     Also, extract any additional information that you think is relevant and not covered in the above points.
