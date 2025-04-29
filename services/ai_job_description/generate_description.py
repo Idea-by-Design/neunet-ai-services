@@ -13,28 +13,45 @@ client = AzureOpenAI(api_key=os.getenv("AZURE_OPENAI_API_KEY"), azure_endpoint=o
 model= os.getenv("deployment_name")
 
 def generate_description(data):
+    # Ensure all required keys for prompt formatting are present
+    required_fields = [
+        'title', 'company_name', 'location', 'estimated_pay', 'type', 'time_commitment',
+        'job_level', 'description', 'requirements', 'benefits', 'job_id'
+    ]
+    # Set defaults for missing fields
+    for field in required_fields:
+        if field not in data or data[field] is None:
+            if field == 'estimated_pay':
+                data[field] = "Not specified"
+            elif field == 'job_level':
+                data[field] = "Not specified"
+            elif field == 'benefits':
+                data[field] = ""
+            else:
+                data[field] = ""
+    # Also ensure both 'title' and 'job_title' are present for prompt formatting
+    if "title" in data and "job_title" not in data:
+        data["job_title"] = data["title"]
+    if "job_title" in data and "title" not in data:
+        data["title"] = data["job_title"]
+
+    # Debug: Print the data dictionary before formatting
+    print("[DEBUG] Data passed to prompt template:", data)
+
     # Load the initial prompt template
     prompt_template = load_prompt()
+    print("[DEBUG] Prompt template before formatting:\n", prompt_template)
 
-    # Fill in missing fields with defaults if necessary
-    data = fill_missing_fields_with_defaults(data)
-
-    # Check for missing fields (for interactive gathering if needed)
-    missing_fields = check_missing_fields(data)
-    if missing_fields:
-        # Generate questions for missing fields
-        questions = generate_questions_for_missing_fields(missing_fields)
-        
-        # Gather missing information via a more complex method (e.g., API call, chatbot interaction)
-        responses = gather_missing_info(questions, data['job_id'])
-        data.update(responses)
-
-    # Finalize the prompt with the available data
-    final_prompt = prompt_template.format(**data)
+    try:
+        # Finalize the prompt with the available data
+        final_prompt = prompt_template.format(**data)
+    except KeyError as e:
+        print("[ERROR] KeyError during prompt formatting! Missing key:", e)
+        print("[ERROR] Data dictionary:", data)
+        raise
 
     # Call the OpenAI API to generate the job description
     generated_description = call_openai_api(final_prompt)
-    
     return generated_description
 
 def load_prompt():
@@ -86,7 +103,12 @@ def fill_missing_fields_with_defaults(data):
     # Provide default values for any missing fields
     defaults = {
         'job_level': "Not specified",
-        'estimated_pay': "Not specified"
+        'estimated_pay': "Not specified",
+        'benefits': "",
+        'company_culture': "",
+        'interview_process': "",
+        'growth_opportunities': "",
+        'tech_stack': ""
     }
     for field, default_value in defaults.items():
         if not data.get(field):

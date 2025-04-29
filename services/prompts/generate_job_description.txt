@@ -56,15 +56,15 @@ Instructions:
 
 5. Example JSON Structure:
     ```JSON
-    {
-      "job_title": "{title}",
-      "company_name": "{company_name}",
-      "location": "{location}",
-      "estimated_pay_range": "{estimated_pay}",
-      "job_type": "{type}",
-      "time_commitment": "{time_commitment}",
-      "job_level": "{job_level}",
-      "about_the_role": "{description}",
+    {{
+      "job_title": "{{title}}",
+      "company_name": "{{company_name}}",
+      "location": "{{location}}",
+      "estimated_pay_range": "{{estimated_pay}}",
+      "job_type": "{{type}}",
+      "time_commitment": "{{time_commitment}}",
+      "job_level": "{{job_level}}",
+      "about_the_role": "{{description}}",
       "key_responsibilities": [
         "Responsibility 1",
         "Responsibility 2",
@@ -85,9 +85,11 @@ Instructions:
         "Benefit 2",
         "..."
       ]
-    }
+    }}
     ```
 
 Final Output:
 Please generate the job description as a JSON object following the instructions above.
 Ensure that the generated job description is engaging, clear, and tailored to attract the right candidates for this position. If certain information is not provided, please note that and generate a general placeholder or request additional details from the recruiter.
+
+IMPORTANT: Return only a valid JSON object. Do NOT wrap it in a string, markdown, or code block. Do NOT include 'json', backticks, or any explanation. Only output the raw JSON object and nothing else.
