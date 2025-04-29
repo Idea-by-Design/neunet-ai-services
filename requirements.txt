@@ -10,3 +10,4 @@ azure-cosmos==4.5.1
 python-jose[cryptography]==3.3.0
 gunicorn==21.2.0
 pyyaml
+openai
