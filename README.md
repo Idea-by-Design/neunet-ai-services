@@ -117,3 +117,40 @@ The application uses a YAML configuration file (`config/config.yaml`) for:
 - Implements secure password hashing with BCrypt
 - Uses JWT for authentication
 - Supports CORS for frontend integration
+
+## Getting Started
+
+1. **Install dependencies:**
+   ```
+   pip install -r requirements.txt
+   ```
+
+2. **Run locally:**
+   ```
+   uvicorn services.api.main:app --reload --host 0.0.0.0 --port 8000
+   ```
+   The API will be available at `http://localhost:8000`.
+
+3. **Run with Docker:**
+   ```
+   docker build -t neunet-backend .
+   docker run -p 8000:8000 neunet-backend
+   ```
+
+## Deployment
+
+- Deploy to [Render](https://render.com/) or your preferred cloud provider.
+- Set all required environment variables (DB credentials, API keys, etc.) in the Render dashboard.
+- Make sure your CORS settings in `services/api/main.py` include your deployed frontend domain (e.g., `https://neunet.io` or `https://www.neunet.io`).
+- After deployment, your API will be available at your Render URL (e.g., `https://neunet-ai-services.onrender.com`).
+
+## API Documentation
+
+- Interactive Swagger UI: `/docs` (e.g., `https://neunet-ai-services.onrender.com/docs`)
+- Redoc documentation: `/redoc`
+
+## Notes
+
+- Ensure `.gitignore` is configured to avoid uploading caches, local config, and secrets.
+- Do **not** commit your `.env` file or credentials to GitHub.
+- Check backend logs on Render if you encounter errors after deployment.
