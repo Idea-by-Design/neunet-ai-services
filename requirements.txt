@@ -11,3 +11,4 @@ python-jose[cryptography]==3.3.0
 gunicorn==21.2.0
 pyyaml
 openai
+PyMuPDF
