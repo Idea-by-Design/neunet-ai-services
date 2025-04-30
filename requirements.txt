@@ -13,3 +13,8 @@ pyyaml
 openai
 PyMuPDF
 python-docx
+reportlab
+github
+python-github
+autogen
+sqlalchemy
