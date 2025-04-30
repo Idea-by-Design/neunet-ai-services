@@ -14,20 +14,55 @@ client = AzureOpenAI(api_key=os.getenv("AZURE_OPENAI_API_KEY"), azure_endpoint=o
 model= os.getenv("deployment_name")
 
 def parse_resume_json(resume_text, links=None):
+    print("[DEBUG] resume_text sent to OpenAI:\n", resume_text)
+    print("[DEBUG] links sent to OpenAI:\n", links)
     
     prompt = f"""
     Extract the following information from the resume text.
-    - name 
+    
+    - name
+        - Extract the candidate's full name exactly as written at the very top of the resume or in the header. This is almost always the first and largest text. Do not use initials or abbreviations; use the complete name (e.g., "May Riley"). If the name is present anywhere in the first few lines, extract it verbatim, even if it looks like a heading.
     - email
     - secondary email
     - phone number
     - secondary phone number
     - location
-    - links 
-        - linkedIn
+    - links
+        - linkedIn (If a LinkedIn URL is present anywhere, extract the entire URL including the username or profile ID, e.g., "linkedin.com/in/m.riley". Do not truncate or omit the username. If the LinkedIn URL is split across lines or has extra spaces, reconstruct it as a single URL.)
         - gitHub
         - website
         - other
+    - email
+    - secondary email
+    - phone number
+    - secondary phone number
+    - location
+    - links
+        - linkedIn (If a LinkedIn URL is present anywhere, extract the entire URL including the username or profile ID, e.g., "linkedin.com/in/m.riley". Do not truncate or omit the username.)
+        - gitHub
+        - website
+        - other
+    - skills (comma-separated list; if a dedicated "Skills" section is not present, extract relevant skills from the experience, summary, and profile sections and list them here)
+
+    Example:
+    Resume Text:
+    \"\"\"
+    John Doe
+    123 Main Street, New York, NY | (123) 456-7890 | john.doe@email.com | https://www.linkedin.com/in/johndoe
+    ...
+    \"\"\"
+    Expected Output:
+    {{
+      "name": "John Doe",
+      "email": "john.doe@email.com",
+      ...
+      "links": {{
+        "linkedIn": "https://www.linkedin.com/in/johndoe",
+        ...
+      }},
+      ...
+    }}
+
     - skills (comma-separated list)
     - education 
         - education 1 

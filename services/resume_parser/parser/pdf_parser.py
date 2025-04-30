@@ -1,6 +1,9 @@
 import fitz
 
 def parse_pdf(file_path):
+    import os
+    print(f"[DEBUG] parse_pdf called with path: {file_path}")
+    print(f"[DEBUG] os.path.exists(path): {os.path.exists(file_path)}")
     doc = fitz.open(file_path)
     text = ""
     links = []

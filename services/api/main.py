@@ -14,6 +14,41 @@ from common.database.cosmos import db_operations
 
 app = FastAPI(title="Neunet Recruitment API")
 
+# ------------------- Resume Parser Endpoint -------------------
+from fastapi import UploadFile, File
+import shutil
+import tempfile
+from services.resume_parser.parser.openai_resume_parser import parse_resume_json
+from services.resume_parser.parser.pdf_parser import parse_pdf
+from services.resume_parser.parser.doc_parser import parse_doc
+
+@app.post("/api/parse-resume")
+async def parse_resume(file: UploadFile = File(...)):
+    import shutil, tempfile, os
+    suffix = os.path.splitext(file.filename)[-1].lower()
+    fd, temp_path = tempfile.mkstemp(suffix=suffix)
+    os.close(fd)  # Close the file descriptor immediately
+    try:
+        with open(temp_path, "wb") as out_file:
+            shutil.copyfileobj(file.file, out_file)
+        await file.close()
+        import os
+        print(f"[DEBUG] temp_path: {temp_path}")
+        print(f"[DEBUG] os.getcwd(): {os.getcwd()}")
+        if suffix == '.pdf':
+            text, hyperlinks = parse_pdf(temp_path)
+        elif suffix in ['.doc', '.docx']:
+            text, hyperlinks = parse_doc(temp_path)
+        else:
+            return {"success": False, "data": None, "error": "Unsupported file format. Please upload PDF or DOCX."}
+        extracted_info = parse_resume_json(text, hyperlinks)
+        return {"success": True, "data": extracted_info, "error": None}
+    except Exception as e:
+        return {"success": False, "data": None, "error": str(e)}
+    finally:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,

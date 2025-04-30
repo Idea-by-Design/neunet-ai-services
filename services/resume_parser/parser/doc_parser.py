@@ -6,7 +6,15 @@ from io import BytesIO
 import fitz
 
 def docx_to_pdf(docx_path, pdf_path):
-    doc = docx.Document(docx_path)
+    import os
+    print(f"[DEBUG] docx_to_pdf called with docx_path: {docx_path}")
+    print(f"[DEBUG] os.path.exists(docx_path): {os.path.exists(docx_path)}")
+    print(f"[DEBUG] Intended pdf_path: {pdf_path}")
+    try:
+        doc = docx.Document(docx_path)
+    except Exception as e:
+        print(f"[DEBUG] ERROR opening docx_path: {e}")
+        raise
     buffer = BytesIO()
 
     c = canvas.Canvas(buffer, pagesize=letter)
@@ -25,6 +33,7 @@ def docx_to_pdf(docx_path, pdf_path):
 
     with open(pdf_path, "wb") as f:
         f.write(buffer.getvalue())
+    print(f"[DEBUG] PDF written to: {pdf_path}, exists after write: {os.path.exists(pdf_path)}")
 
 
 def parse_pdf(file_path):
@@ -49,7 +58,10 @@ def parse_pdf(file_path):
 
 
 def parse_doc(docx_path):
-    pdf_path = "temp"+ docx_path.replace('.docx', '.pdf')
+    import os
+    print(f"[DEBUG] parse_doc called with docx_path: {docx_path}")
+    print(f"[DEBUG] os.path.exists(docx_path): {os.path.exists(docx_path)}")
+    pdf_path = docx_path.replace('.docx', '.pdf')
     
     docx_to_pdf(docx_path, pdf_path)
     
